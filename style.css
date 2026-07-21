@@ -1,0 +1,8 @@
+body {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+canvas {
+    background-color: black;
+}
