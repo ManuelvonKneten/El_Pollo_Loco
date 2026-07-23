@@ -27,26 +27,29 @@ class World {
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.drawImage(this.character.img, this.character.x, this.character.y, this.character.width, this.character.height);
+
+        this.addToMap(this.character);
 
         this.enemies.forEach((enemy) => {
-            this.ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
+            this.addToMap(enemy);
         });
 
         this.clouds.forEach((cloud) => {
-            this.ctx.drawImage(cloud.img, cloud.x, cloud.y, cloud.width, cloud.height);
+            this.addToMap(cloud);
         });
 
         this.backgroundObjects.forEach((bg) => {
-            this.ctx.drawImage(bg.img, bg.x, bg.y, bg.width, bg.height);
+            this.addToMap(bg);
         });
-
-
 
         // Draw() wird immer wieder aufgerufen
         let self = this;
         requestAnimationFrame(function () {
             self.draw();
         });
+    }
+
+    addToMap(mo) {
+        this.ctx.drawImage(mo.img, mo.x, mo.y, mo.width, mo.height);
     }
 }
