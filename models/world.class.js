@@ -197,11 +197,11 @@ class World {
         this.ctx.textAlign = 'center';
         this.drawOutlinedText(this.coinsCollected + ' / ' + this.level.totalCoins, this.coinBar.x + this.coinBar.width / 2, this.coinBar.y + this.coinBar.height / 2 + 6);
         this.drawOutlinedText(String(this.bottlesAvailable), this.bottleBar.x + this.bottleBar.width / 2, this.bottleBar.y + this.bottleBar.height / 2 + 6);
-        this.ctx.textAlign = 'left';
 
         if (this.level.endboss.hadFirstContact) {
-            this.drawOutlinedText('ENDBOSS ' + Math.round(this.level.endboss.energy) + '%', 500, 60);
+            this.drawOutlinedText(Math.round(this.level.endboss.energy) + '%', this.endbossBar.x + this.endbossBar.width / 2, this.endbossBar.y + this.endbossBar.height / 2 + 6);
         }
+        this.ctx.textAlign = 'left';
     }
 
     drawOutlinedText(text, x, y) {
