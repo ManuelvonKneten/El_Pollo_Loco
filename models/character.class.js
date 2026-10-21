@@ -1,8 +1,9 @@
-class Character extends MovableObject {
+﻿class Character extends MovableObject {
 
     height = 320;
     y = 120;
     speed = 10;
+    energy = 100;
     IMAGES_WALKING = [
             'img/2_character_pepe/2_walk/W-21.png',
             'img/2_character_pepe/2_walk/W-22.png',
@@ -27,11 +28,31 @@ class Character extends MovableObject {
         world;
         // walking_sound = new Audio('audio/running.mp3'); // sound muss noch runtergeladen werden
 
+        IMAGES_DEAD = [
+            'img/2_character_pepe/5_dead/D-51.png',
+            'img/2_character_pepe/5_dead/D-52.png',
+            'img/2_character_pepe/5_dead/D-53.png',
+            'img/2_character_pepe/5_dead/D-54.png',
+            'img/2_character_pepe/5_dead/D-55.png',
+            'img/2_character_pepe/5_dead/D-56.png',
+            'img/2_character_pepe/5_dead/D-57.png'
+        ];
+
+        IMAGES_HURT = [
+            'img/2_character_pepe/4_hurt/H-41.png',
+            'img/2_character_pepe/4_hurt/H-42.png',
+            'img/2_character_pepe/4_hurt/H-43.png'
+        ];
+
+
     constructor(){
         super();
         this.loadImage('img/2_character_pepe/2_walk/W-21.png');
         this.loadImages(this.IMAGES_WALKING);
         this.loadImages(this.IMAGES_JUMPING);
+        this.loadImages(this.IMAGES_DEAD);
+        this.loadImages(this.IMAGES_HURT);
+
         this.applyGravity();
 
         this.animate();
@@ -40,6 +61,12 @@ class Character extends MovableObject {
     animate(){
 
         setInterval(() => {
+
+            if(this.isDead()) {
+                this.playAnimation(this.IMAGES_DEAD);
+            } else if(this.isHurt()) {
+                this.playAnimation(this.IMAGES_HURT);
+            }
             if(this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                 this.moveRight();
                 this.otherDirection = false;
@@ -73,5 +100,11 @@ class Character extends MovableObject {
         }, 50);
     }
 
+    isColling(mo) {
+        return this.x + this.width > mo.x &&
+               this.y + this.height > mo.y &&
+               this.x < mo.x + mo.width &&
+               this.y < mo.y + mo.height;
+    }    
 
 }
