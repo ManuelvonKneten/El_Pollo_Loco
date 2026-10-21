@@ -52,7 +52,7 @@ class World {
     }
 
     checkEndbossContact() {
-        if (!this.level.endboss.hadFirstContact && this.character.x > this.level.level_end_x) {
+        if (!this.level.endboss.hadFirstContact && this.character.x > this.level.bossZoneX) {
             this.level.endboss.hadFirstContact = true;
             this.level.endboss.alertUntil = Date.now() + 1000;
             playSound('bossAlert');

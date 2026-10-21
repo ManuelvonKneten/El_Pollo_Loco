@@ -7,7 +7,8 @@ class Level {
     endboss;
     totalCoins;
     totalBottles;
-    level_end_x = 2200;
+    bossZoneX = 2000;
+    level_end_x = 2700;
 
     constructor(enemies, clouds, backgroundObjects, coins, bottles){
 
