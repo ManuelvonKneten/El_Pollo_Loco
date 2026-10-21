@@ -1,13 +1,72 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
+let intervalIds = [];
+
+function setStoppableInterval(fn, time) {
+    let id = setInterval(fn, time);
+    intervalIds.push(id);
+    return id;
+}
+
+function stopAllIntervals() {
+    intervalIds.forEach(id => clearInterval(id));
+    intervalIds = [];
+}
 
 function init(){
     canvas = document.getElementById('canvas');
+    showStartScreen();
+}
+
+function showStartScreen() {
+    document.getElementById('start_screen').classList.remove('d_none');
+    document.getElementById('game_over_screen').classList.add('d_none');
+    document.getElementById('win_screen').classList.add('d_none');
+}
+
+function startGame() {
+    document.getElementById('start_screen').classList.add('d_none');
+    document.getElementById('game_over_screen').classList.add('d_none');
+    document.getElementById('win_screen').classList.add('d_none');
+
+    stopAllIntervals();
+    initLevel1();
     world = new World(canvas, keyboard);
+    playMusic();
+}
 
-    console.log('My Characakter is' , world.character);
+function gameOver() {
+    if (world.gameEnded) {
+        return;
+    }
+    world.gameEnded = true;
+    stopAllIntervals();
+    stopMusic();
+    playSound('gameOver');
+    document.getElementById('game_over_screen').classList.remove('d_none');
+}
 
+function gameWon() {
+    if (world.gameEnded) {
+        return;
+    }
+    world.gameEnded = true;
+    stopAllIntervals();
+    stopMusic();
+    playSound('win');
+    document.getElementById('won_coins').innerText = world.coinsCollected + ' / ' + world.level.totalCoins;
+    document.getElementById('win_screen').classList.remove('d_none');
+}
+
+function restartGame() {
+    startGame();
+}
+
+function backToMenu() {
+    stopAllIntervals();
+    stopMusic();
+    showStartScreen();
 }
 
 
@@ -30,7 +89,10 @@ window.addEventListener("keydown", (event) => {
     if (event.keyCode == 68) {
         keyboard.D = true;
     }
-    console.log(event);
+    if (event.keyCode == 77 && !keyboard.M) {
+        keyboard.M = true;
+        toggleMute();
+    }
 });
 
 
@@ -53,5 +115,7 @@ window.addEventListener("keyup", (event) => {
     if (event.keyCode == 68) {
         keyboard.D = false;
     }
-    console.log(event);
+    if (event.keyCode == 77) {
+        keyboard.M = false;
+    }
 });

@@ -1,4 +1,4 @@
-﻿class Character extends MovableObject {
+class Character extends MovableObject {
 
     height = 320;
     y = 120;
@@ -24,7 +24,7 @@
             'img/2_character_pepe/3_jump/J-38.png',
             'img/2_character_pepe/3_jump/J-39.png'
 
-        ]; 
+        ];
         world;
         // walking_sound = new Audio('audio/running.mp3'); // sound muss noch runtergeladen werden
 
@@ -57,14 +57,16 @@
 
         this.animate();
     }
-    
+
     animate(){
 
-        setInterval(() => {
+        setStoppableInterval(() => {
 
-            if(this.isDead()) {
+            if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
-            } else if(this.isHurt()) {
+                return;
+            }
+            if (this.isHurt()) {
                 this.playAnimation(this.IMAGES_HURT);
             }
             if(this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
@@ -78,17 +80,20 @@
             // this.waling_sound.play();
             }
 
-             if(this.world.keyboard.UP && !this.isAboveGround()) {
+             if((this.world.keyboard.UP || this.world.keyboard.SPACE) && !this.isAboveGround()) {
                  this.jump();
-                 
+                 playSound('jump');
             }
 
             this.world.camera_x = -this.x +100;
-        }, 1000 / 60); 
+        }, 1000 / 60);
 
 
-        setInterval(() => {
+        setStoppableInterval(() => {
 
+            if (this.isDead()) {
+                return;
+            }
             if(this.isAboveGround()) {
                 this.playAnimation(this.IMAGES_JUMPING);
             } else {
@@ -99,12 +104,5 @@
             }
         }, 50);
     }
-
-    isColling(mo) {
-        return this.x + this.width > mo.x &&
-               this.y + this.height > mo.y &&
-               this.x < mo.x + mo.width &&
-               this.y < mo.y + mo.height;
-    }    
 
 }

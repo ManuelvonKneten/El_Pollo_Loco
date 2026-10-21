@@ -5,10 +5,11 @@ class MovableObject extends DrawableObject {
     acceleration = 2.5;
     energy = 100;
     lastHit = 0;
+    dead = false;
 
 
     applyGravity() {
-        setInterval(() => {
+        setStoppableInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
             this.y -= this.speedY;
             this.speedY -= this.acceleration;
@@ -29,8 +30,8 @@ class MovableObject extends DrawableObject {
                this.y < mo.y + mo.height;
     }
 
-    hit() {
-        this.energy -= 5;
+    hit(damage = 5) {
+        this.energy -= damage;
         if (this.energy < 0) {
             this.energy = 0;
         }
