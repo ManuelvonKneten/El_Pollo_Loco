@@ -194,9 +194,8 @@ class World {
         this.ctx.strokeStyle = 'black';
         this.ctx.fillStyle = 'white';
 
-        this.drawOutlinedText('COINS: ' + this.coinsCollected + ' / ' + this.level.totalCoins, 210, 78);
-
         this.ctx.textAlign = 'center';
+        this.drawOutlinedText(this.coinsCollected + ' / ' + this.level.totalCoins, this.coinBar.x + this.coinBar.width / 2, this.coinBar.y + this.coinBar.height / 2 + 6);
         this.drawOutlinedText(String(this.bottlesAvailable), this.bottleBar.x + this.bottleBar.width / 2, this.bottleBar.y + this.bottleBar.height / 2 + 6);
         this.ctx.textAlign = 'left';
 
