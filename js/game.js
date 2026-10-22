@@ -137,11 +137,17 @@ function closeOptions() {
 }
 
 function openImpressum() {
+    closeOptions();
     document.getElementById('impressum_screen').classList.remove('d_none');
 }
 
 function closeImpressum() {
     document.getElementById('impressum_screen').classList.add('d_none');
+}
+
+function closeImpressumToOptions() {
+    closeImpressum();
+    openOptions();
 }
 
 

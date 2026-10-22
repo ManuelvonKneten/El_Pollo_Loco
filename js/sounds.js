@@ -1,4 +1,4 @@
-let soundsMuted = false;
+let soundsMuted = localStorage.getItem('soundsMuted') === 'true';
 
 const SOUND_FILES = {
     jump: 'audio/jump.mp3',
@@ -41,6 +41,7 @@ function stopMusic() {
 
 function toggleMute() {
     soundsMuted = !soundsMuted;
+    localStorage.setItem('soundsMuted', soundsMuted);
     if (soundsMuted) {
         backgroundMusic.pause();
     } else if (typeof world !== 'undefined' && world && !world.gameEnded) {
@@ -59,3 +60,5 @@ function updateMuteButtons() {
         }
     });
 }
+
+updateMuteButtons();
