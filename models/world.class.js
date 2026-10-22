@@ -164,7 +164,7 @@ class World {
                 return;
             }
             this.level.enemies.forEach((enemy) => {
-                if (!enemy.dead && bottle.isColling(enemy)) {
+                if (!bottle.hasHit && !enemy.dead && bottle.isColling(enemy)) {
                     this.hitEnemyWithBottle(bottle, enemy);
                 }
             });

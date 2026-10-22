@@ -196,6 +196,19 @@ function backToMenu() {
 
 
 /**
+ * Schließt ein Overlay, wenn außerhalb seines Inhalts (auf den Hintergrund)
+ * geklickt wurde.
+ * @param {MouseEvent} event - Das Klick-Event auf dem Overlay-Hintergrund.
+ * @param {Function} closeFn - Funktion, die das Overlay schließt.
+ */
+function closeOverlayOnBackdropClick(event, closeFn) {
+    if (event.target === event.currentTarget) {
+        closeFn();
+    }
+}
+
+
+/**
  * Zeigt das Einstellungen-Menü an.
  */
 function openOptions() {

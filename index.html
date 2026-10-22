@@ -94,7 +94,7 @@
             </div>
         </div>
 
-        <div id="options_screen" class="game_overlay d_none">
+        <div id="options_screen" class="game_overlay d_none" onclick="closeOverlayOnBackdropClick(event, closeOptions)">
             <div class="overlay_content">
                 <h2>Einstellungen</h2>
                 <button class="overlay_button" onclick="closeOptions(); backToMenu()">Hauptmenü</button>
@@ -103,7 +103,7 @@
             </div>
         </div>
 
-        <div id="impressum_screen" class="game_overlay d_none">
+        <div id="impressum_screen" class="game_overlay d_none" onclick="closeOverlayOnBackdropClick(event, closeImpressumToOptions)">
             <div class="overlay_content impressum_content">
                 <h2>Impressum</h2>
                 <p class="impressum_text">
