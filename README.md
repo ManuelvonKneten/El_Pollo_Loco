@@ -47,23 +47,32 @@ Anschließend im Browser `http://localhost:8000` öffnen.
 ## 📁 Projektstruktur
 
 ```
-index.html              Einstiegspunkt, Canvas und UI-Overlays
-style.css                Layout, Overlays, Theme
-js/
-  game.js                Spielzustand (Start/Game Over/Gewinn/Neustart), Tastatur & Touch
-  sounds.js               Sound- und Musikwiedergabe
-  levels/level1.js        Aufbau des ersten Levels
-models/
-  drawable-objects.class.js   Basisklasse: Zeichnen & Animation
-  movable-object.class.js     Basisklasse: Bewegung, Schwerkraft, Kollision
-  character.class.js          Spielfigur (Pepe)
-  chicken.class.js             Normale Gegner
-  endboss.class.js             Endgegner
-  throwable-objects.class.js   Geworfene Flaschen
-  coin.class.js / bottle.class.js   Sammelobjekte
-  status-bar.class.js          HUD-Statusbars (Leben/Coins/Flaschen/Endgegner)
-  cloud.class.js / background-object.class.js   Hintergrund
-  level.class.js / keyboard.class.js / world.class.js   Level-, Input- und Spiellogik
+El_Pollo_Loco/
+├── index.html                       Einstiegspunkt, Canvas und UI-Overlays
+├── style.css                        Layout, Overlays, Theme
+├── audio/                           Musik & Soundeffekte (.mp3)
+├── fonts/                           Zabars.ttf
+├── img/                             Sprites, Hintergründe, Icons, Statusbars
+├── js/
+│   ├── game.js                      Spielzustand (Start/Game Over/Gewinn/Neustart), Tastatur & Touch
+│   ├── sounds.js                    Sound- und Musikwiedergabe
+│   └── levels/
+│       └── level1.js                Aufbau des ersten Levels
+└── models/
+    ├── drawable-objects.class.js    Basisklasse: Zeichnen & Animation
+    ├── movable-object.class.js      Basisklasse: Bewegung, Schwerkraft, Kollision
+    ├── character.class.js           Spielfigur (Pepe)
+    ├── chicken.class.js             Normale Gegner
+    ├── endboss.class.js             Endgegner
+    ├── throwable-objects.class.js   Geworfene Flaschen
+    ├── coin.class.js                Sammelobjekt: Münze
+    ├── bottle.class.js              Sammelobjekt: Flasche
+    ├── status-bar.class.js          HUD-Statusbars (Leben/Coins/Flaschen/Endgegner)
+    ├── cloud.class.js               Wolken
+    ├── background-object.class.js   Hintergrund-Layer
+    ├── level.class.js               Level-Daten
+    ├── keyboard.class.js            Tastatur-Zustand
+    └── world.class.js               Zentrale Spiellogik (Kollisionen, Zeichnen, Loop)
 ```
 
 ## 🛠️ Technik
