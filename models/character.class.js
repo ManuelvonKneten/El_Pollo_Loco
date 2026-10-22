@@ -4,6 +4,7 @@ class Character extends MovableObject {
     y = 120;
     speed = 5;
     energy = 100;
+    pickupTopPadding = 140;
     IMAGES_WALKING = [
             'img/2_character_pepe/2_walk/W-21.png',
             'img/2_character_pepe/2_walk/W-22.png',
@@ -103,6 +104,15 @@ class Character extends MovableObject {
                 }
             }
         }, 50);
+    }
+
+    isCollingPickup(obj) {
+        let y = this.y + this.pickupTopPadding;
+        let height = this.height - this.pickupTopPadding;
+        return this.x + this.width > obj.x &&
+               y + height > obj.y &&
+               this.x < obj.x + obj.width &&
+               y < obj.y + obj.height;
     }
 
 }

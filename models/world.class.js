@@ -61,13 +61,13 @@ class World {
 
     checkCollisions() {
         this.level.coins.forEach((coin) => {
-            if (this.character.isColling(coin)) {
+            if (this.character.isCollingPickup(coin)) {
                 this.collectCoin(coin);
             }
         });
 
         this.level.bottles.forEach((bottle) => {
-            if (this.character.isColling(bottle)) {
+            if (this.character.isCollingPickup(bottle)) {
                 this.collectBottle(bottle);
             }
         });
@@ -189,14 +189,14 @@ class World {
     }
 
     drawHudText() {
-        this.ctx.font = 'bold 16px Arial';
-        this.ctx.lineWidth = 3;
+        this.ctx.font = 'bold 12px Arial';
+        this.ctx.lineWidth = 2;
         this.ctx.strokeStyle = 'black';
         this.ctx.fillStyle = 'white';
 
         this.ctx.textAlign = 'center';
-        this.drawOutlinedText(this.coinsCollected + ' / ' + this.level.totalCoins, this.coinBar.x + this.coinBar.width / 2, this.coinBar.y + this.coinBar.height / 2 + 6);
-        this.drawOutlinedText(String(this.bottlesAvailable), this.bottleBar.x + this.bottleBar.width / 2, this.bottleBar.y + this.bottleBar.height / 2 + 6);
+        this.drawOutlinedText(this.coinsCollected + ' / ' + this.level.totalCoins, this.coinBar.x + this.coinBar.width / 2, this.coinBar.y + this.coinBar.height / 2 + 10);
+        this.drawOutlinedText(String(this.bottlesAvailable), this.bottleBar.x + this.bottleBar.width / 2, this.bottleBar.y + this.bottleBar.height / 2 + 10);
 
         if (this.level.endboss.hadFirstContact) {
             this.drawOutlinedText(Math.round(this.level.endboss.energy) + '%', this.endbossBar.x + this.endbossBar.width / 2, this.endbossBar.y + this.endbossBar.height / 2 + 6);
