@@ -102,6 +102,16 @@ canvas {
     background-color: #ffbb55;
 }
 
+.primary_button {
+    font-size: 26px;
+    padding: 14px 40px;
+}
+
+.start_screen_icons {
+    display: flex;
+    gap: 14px;
+}
+
 .ingame_controls {
     position: absolute;
     top: 10px;
@@ -159,10 +169,44 @@ canvas {
     z-index: 3;
 }
 
+#options_screen,
+#impressum_screen {
+    z-index: 4;
+}
+
+.impressum_content {
+    max-width: 90%;
+    max-height: 85%;
+    overflow-y: auto;
+}
+
+.impressum_text {
+    text-align: left;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.controls_box {
+    margin-top: 6px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    width: 100%;
+}
+
+.controls_box h3 {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #e8a33d;
+}
+
 .controls_table {
     color: white;
     border-collapse: collapse;
     font-size: 18px;
+    margin: 0 auto;
 }
 
 .controls_table td {

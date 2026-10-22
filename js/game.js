@@ -24,6 +24,8 @@ function init(){
 }
 
 function showStartScreen() {
+    closeOptions();
+    closeImpressum();
     document.getElementById('start_screen').classList.remove('d_none');
     document.getElementById('game_over_screen').classList.add('d_none');
     document.getElementById('win_screen').classList.add('d_none');
@@ -32,6 +34,8 @@ function showStartScreen() {
 }
 
 function startGame() {
+    closeOptions();
+    closeImpressum();
     document.getElementById('start_screen').classList.add('d_none');
     document.getElementById('game_over_screen').classList.add('d_none');
     document.getElementById('win_screen').classList.add('d_none');
@@ -54,6 +58,8 @@ function gameOver() {
     stopAllIntervals();
     stopMusic();
     playSound('gameOver');
+    closeOptions();
+    closeImpressum();
     document.getElementById('ingame_controls').classList.add('d_none');
     document.getElementById('mobile_controls').classList.add('d_none');
     document.getElementById('game_over_screen').classList.remove('d_none');
@@ -68,6 +74,8 @@ function gameWon() {
     stopMusic();
     playSound('win');
     document.getElementById('won_coins').innerText = world.coinsCollected + ' / ' + world.level.totalCoins;
+    closeOptions();
+    closeImpressum();
     document.getElementById('ingame_controls').classList.add('d_none');
     document.getElementById('mobile_controls').classList.add('d_none');
     document.getElementById('win_screen').classList.remove('d_none');
@@ -118,6 +126,22 @@ function backToMenu() {
     stopAllIntervals();
     stopMusic();
     showStartScreen();
+}
+
+function openOptions() {
+    document.getElementById('options_screen').classList.remove('d_none');
+}
+
+function closeOptions() {
+    document.getElementById('options_screen').classList.add('d_none');
+}
+
+function openImpressum() {
+    document.getElementById('impressum_screen').classList.remove('d_none');
+}
+
+function closeImpressum() {
+    document.getElementById('impressum_screen').classList.add('d_none');
 }
 
 

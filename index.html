@@ -13,6 +13,7 @@
     <script src="models/throwable-objects.class.js" defer></script>
     <script src="models/character.class.js" defer></script>
     <script src="models/chicken.class.js" defer></script>
+    <script src="models/chicken-small.class.js" defer></script>
     <script src="models/cloud.class.js" defer></script>
     <script src="models/coin.class.js" defer></script>
     <script src="models/bottle.class.js" defer></script>
@@ -37,7 +38,7 @@
         <canvas id="canvas" width="720" height="480"></canvas>
 
         <div id="ingame_controls" class="ingame_controls d_none">
-            <button class="icon_button" onclick="backToMenu()"><img src="img/icons/settings.png" alt="Menü"></button>
+            <button class="icon_button" onclick="openOptions()"><img src="img/icons/settings.png" alt="Einstellungen"></button>
             <button class="icon_button mute_button" onclick="toggleMute()"><img src="img/icons/audio.png" alt="Sound"></button>
         </div>
 
@@ -63,14 +64,20 @@
             <img class="screen_background" src="img/9_intro_outro_screens/start/startscreen_1.png" alt="">
             <div class="overlay_content">
                 <h2>El Pollo Loco</h2>
-                <button class="overlay_button" onclick="startGame()">Spiel starten</button>
-                <button class="overlay_button mute_button" onclick="toggleMute()">🔊 Musik aus</button>
-                <table class="controls_table">
-                    <tr><td>&larr; / &rarr;</td><td>Nach links / rechts laufen</td></tr>
-                    <tr><td>&uarr; / Leertaste</td><td>Springen</td></tr>
-                    <tr><td>D</td><td>Flasche werfen</td></tr>
-                    <tr><td>M</td><td>Musik / Sound ein- und ausschalten</td></tr>
-                </table>
+                <button class="overlay_button primary_button" onclick="startGame()">Spiel starten</button>
+                <div class="start_screen_icons">
+                    <button class="icon_button mute_button" onclick="toggleMute()"><img src="img/icons/audio.png" alt="Sound"></button>
+                    <button class="icon_button" onclick="openOptions()"><img src="img/icons/settings.png" alt="Einstellungen"></button>
+                </div>
+                <div class="controls_box">
+                    <h3>Steuerung</h3>
+                    <table class="controls_table">
+                        <tr><td>&larr; / &rarr;</td><td>Nach links / rechts laufen</td></tr>
+                        <tr><td>&uarr; / Leertaste</td><td>Springen</td></tr>
+                        <tr><td>D</td><td>Flasche werfen</td></tr>
+                        <tr><td>M</td><td>Musik / Sound ein- und ausschalten</td></tr>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -89,6 +96,31 @@
                 <p>Gesammelte Münzen: <span id="won_coins">0 / 0</span></p>
                 <button class="overlay_button" onclick="restartGame()">Erneut spielen</button>
                 <button class="overlay_button" onclick="backToMenu()">Hauptmenü</button>
+            </div>
+        </div>
+
+        <div id="options_screen" class="game_overlay d_none">
+            <div class="overlay_content">
+                <h2>Einstellungen</h2>
+                <button class="overlay_button" onclick="closeOptions(); backToMenu()">Hauptmenü</button>
+                <button class="overlay_button" onclick="openImpressum()">Impressum</button>
+                <button class="overlay_button" onclick="closeOptions()">Zurück</button>
+            </div>
+        </div>
+
+        <div id="impressum_screen" class="game_overlay d_none">
+            <div class="overlay_content impressum_content">
+                <h2>Impressum</h2>
+                <p class="impressum_text">
+                    Angaben gemäß § 5 TMG<br><br>
+                    [DEIN NAME]<br>
+                    [DEINE STRASSE UND HAUSNUMMER]<br>
+                    [DEINE PLZ UND ORT]<br><br>
+                    Kontakt:<br>
+                    E-Mail: [DEINE E-MAIL]<br>
+                    Telefon: [DEINE TELEFONNUMMER]
+                </p>
+                <button class="overlay_button" onclick="closeImpressum()">Zurück</button>
             </div>
         </div>
     </div>
