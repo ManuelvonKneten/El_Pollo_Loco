@@ -3,6 +3,18 @@
     src: url('fonts/Zabars.ttf');
 }
 
+@font-face {
+    font-family: 'Roboto';
+    src: url('fonts/Roboto-Regular.woff2') format('woff2');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('fonts/Roboto-Bold.woff2') format('woff2');
+    font-weight: 700;
+}
+
 html {
     background-image: url('img/background-image.png');
     background-size: cover;
@@ -127,6 +139,9 @@ canvas {
     background: none;
     padding: 0;
     cursor: pointer;
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    user-select: none;
 }
 
 .icon_button img {
@@ -136,6 +151,9 @@ canvas {
     padding: 10px;
     border-radius: 50%;
     background-color: #e8a33d;
+    -webkit-touch-callout: none;
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
 .icon_button:hover img {
