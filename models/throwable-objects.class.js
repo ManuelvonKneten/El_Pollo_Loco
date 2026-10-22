@@ -1,3 +1,7 @@
+/**
+ * Geworfene Flasche. Fliegt in einer Wurfkurve, rotiert in der Luft und
+ * zeigt beim Aufprall (Boden oder Gegner) eine Splash-Animation.
+ */
 class ThrowableObject extends MovableObject {
     IMAGES_ROTATION = [
         'img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png',
@@ -21,6 +25,13 @@ class ThrowableObject extends MovableObject {
     hasHit = false;
     splashStartTime = 0;
 
+
+    /**
+     * Erstellt eine geworfene Flasche und startet sofort die Flugbahn.
+     * @param {number} x - Start-x-Position (meist Charakterposition).
+     * @param {number} y - Start-y-Position.
+     * @param {boolean} otherDirection - true, wenn nach links geworfen wird.
+     */
     constructor(x, y, otherDirection) {
         super();
         this.loadImage(this.IMAGES_ROTATION[0]);
@@ -32,10 +43,24 @@ class ThrowableObject extends MovableObject {
         this.throw();
     }
 
+
+    /**
+     * Startet die Wurfbewegung (Flugkurve mit Schwerkraft) und die
+     * Rotationsanimation der Flasche.
+     */
     throw() {
         this.speedY = 30;
         this.speedX = this.otherDirection ? -20 : 20;
+        this.startFlight();
+        this.startRotation();
+    }
 
+
+    /**
+     * Lässt die Flasche fliegen (Schwerkraft + horizontale Bewegung) und
+     * löst beim Bodenkontakt den Splash aus.
+     */
+    startFlight() {
         this.flightInterval = setStoppableInterval(() => {
             if (this.hasHit) {
                 return;
@@ -43,13 +68,18 @@ class ThrowableObject extends MovableObject {
             this.y -= this.speedY;
             this.speedY -= this.acceleration;
             this.x += this.speedX;
-
             if (this.y >= this.groundY) {
                 this.y = this.groundY;
                 this.splash();
             }
         }, 25);
+    }
 
+
+    /**
+     * Spielt die Rotationsanimation der fliegenden Flasche ab.
+     */
+    startRotation() {
         this.rotationInterval = setStoppableInterval(() => {
             if (!this.hasHit) {
                 this.playAnimation(this.IMAGES_ROTATION);
@@ -57,6 +87,11 @@ class ThrowableObject extends MovableObject {
         }, 100);
     }
 
+
+    /**
+     * Stoppt Flug und Rotation, markiert die Flasche als getroffen und
+     * spielt die Splash-Animation ab.
+     */
     splash() {
         if (this.hasHit) {
             return;
@@ -66,7 +101,15 @@ class ThrowableObject extends MovableObject {
         this.currentImage = 0;
         clearInterval(this.flightInterval);
         clearInterval(this.rotationInterval);
+        this.startSplashAnimation();
+    }
 
+
+    /**
+     * Spielt die Splash-Bildfolge einmal komplett ab und stoppt danach
+     * das Interval.
+     */
+    startSplashAnimation() {
         let splashInterval = setStoppableInterval(() => {
             if (this.currentImage >= this.IMAGES_SPLASH.length) {
                 clearInterval(splashInterval);

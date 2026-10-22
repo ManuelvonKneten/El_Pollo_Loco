@@ -1,3 +1,7 @@
+/**
+ * Die Spielfigur Pepe. Steuert Bewegung, Sprung, Animationen und die
+ * Kollisionsbox fürs Einsammeln von Coins und Flaschen.
+ */
 class Character extends MovableObject {
 
     height = 320;
@@ -54,7 +58,6 @@ class Character extends MovableObject {
 
         ];
         world;
-        // walking_sound = new Audio('audio/running.mp3'); // sound muss noch runtergeladen werden
 
         IMAGES_DEAD = [
             'img/2_character_pepe/5_dead/D-51.png',
@@ -73,6 +76,10 @@ class Character extends MovableObject {
         ];
 
 
+    /**
+     * Erstellt den Charakter, lädt alle Animationsbilder und startet
+     * Schwerkraft sowie die laufende Animation/Steuerung.
+     */
     constructor(){
         super();
         this.loadImage('img/2_character_pepe/2_walk/W-21.png');
@@ -90,10 +97,24 @@ class Character extends MovableObject {
         this.animate();
     }
 
+
+    /**
+     * Startet zwei Intervalle: eines für Bewegung/Tastatursteuerung (60fps)
+     * und eines für den Wechsel der Sprites je nach Zustand (Tod, Sprung,
+     * Laufen, Idle, Schlafen).
+     */
     animate(){
+        this.animateMovement();
+        this.animateSprite();
+    }
 
+
+    /**
+     * Prüft bei jedem Tick Tod/Verletzung, verarbeitet die Tastatureingabe
+     * und aktualisiert die Kameraposition.
+     */
+    animateMovement() {
         setStoppableInterval(() => {
-
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
                 return;
@@ -101,55 +122,93 @@ class Character extends MovableObject {
             if (this.isHurt()) {
                 this.playAnimation(this.IMAGES_HURT);
             }
-            if(this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
-                this.moveRight();
-                this.otherDirection = false;
-                this.lastActionTime = new Date().getTime();
-                // this.waling_sound.play();
-            }
-            if(this.world.keyboard.LEFT && this.x > 0 ) {
-                this.moveLeft();
-                this.otherDirection = true;
-                this.lastActionTime = new Date().getTime();
-            // this.waling_sound.play();
-            }
-
-             if((this.world.keyboard.UP || this.world.keyboard.SPACE) && !this.isAboveGround()) {
-                 this.jump();
-                 playSound('jump');
-                 this.lastActionTime = new Date().getTime();
-            }
-
-            if (this.world.keyboard.D) {
-                this.lastActionTime = new Date().getTime();
-            }
-
-            this.world.camera_x = -this.x +100;
+            this.handleMovementInput();
+            this.world.camera_x = -this.x + 100;
         }, 1000 / 60);
+    }
 
 
+    /**
+     * Verarbeitet Lauf-, Sprung- und Wurftasten.
+     */
+    handleMovementInput() {
+        this.handleHorizontalMovement();
+        this.handleJumpInput();
+    }
+
+
+    /**
+     * Bewegt den Charakter nach links/rechts, sofern innerhalb der Levelgrenzen.
+     */
+    handleHorizontalMovement() {
+        if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+            this.moveRight();
+            this.otherDirection = false;
+            this.lastActionTime = new Date().getTime();
+        }
+        if (this.world.keyboard.LEFT && this.x > 0) {
+            this.moveLeft();
+            this.otherDirection = true;
+            this.lastActionTime = new Date().getTime();
+        }
+    }
+
+
+    /**
+     * Startet einen Sprung und merkt sich Flaschenwürfe als Aktivität
+     * (für die Idle-/Sleep-Erkennung).
+     */
+    handleJumpInput() {
+        if ((this.world.keyboard.UP || this.world.keyboard.SPACE) && !this.isAboveGround()) {
+            this.jump();
+            playSound('jump');
+            this.lastActionTime = new Date().getTime();
+        }
+        if (this.world.keyboard.D) {
+            this.lastActionTime = new Date().getTime();
+        }
+    }
+
+
+    /**
+     * Wechselt die Sprites je nach Zustand: Sprung, Laufen, Idle oder Schlafen.
+     */
+    animateSprite() {
         setStoppableInterval(() => {
-
             if (this.isDead()) {
                 return;
             }
-            if(this.isAboveGround()) {
+            if (this.isAboveGround()) {
                 this.playAnimation(this.IMAGES_JUMPING);
             } else {
-                if(this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                    // Walk animation
-                    this.playAnimation(this.IMAGES_WALKING);
-                } else if (new Date().getTime() - this.lastActionTime >= 15000) {
-                    // Sleep animation nach 15 Sekunden ohne Eingabe
-                    this.playAnimation(this.IMAGES_SLEEP);
-                } else {
-                    // Idle animation
-                    this.playAnimation(this.IMAGES_IDLE);
-                }
+                this.playIdleOrWalkAnimation();
             }
         }, 50);
     }
 
+
+    /**
+     * Zeigt Lauf-, Idle- oder Sleep-Animation, je nachdem ob der Charakter
+     * sich bewegt und wie lange die letzte Eingabe her ist.
+     */
+    playIdleOrWalkAnimation() {
+        if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+            this.playAnimation(this.IMAGES_WALKING);
+        } else if (new Date().getTime() - this.lastActionTime >= 15000) {
+            this.playAnimation(this.IMAGES_SLEEP);
+        } else {
+            this.playAnimation(this.IMAGES_IDLE);
+        }
+    }
+
+
+    /**
+     * Prüft die Kollision mit Sammelobjekten (Coins/Flaschen) über eine
+     * verkleinerte Hitbox, damit nicht jede Münze über dem Kopf automatisch
+     * eingesammelt wird.
+     * @param {DrawableObject} obj - Das Sammelobjekt.
+     * @returns {boolean} true, wenn der Charakter das Objekt erreicht.
+     */
     isCollingPickup(obj) {
         let y = this.y + this.pickupTopPadding;
         let height = this.height - this.pickupTopPadding;

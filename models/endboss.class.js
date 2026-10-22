@@ -1,3 +1,7 @@
+/**
+ * Endgegner des Levels. Patrouilliert zunächst, greift nach dem ersten
+ * Spielerkontakt an und wird über Flaschentreffer besiegt.
+ */
 class Endboss extends MovableObject {
     height = 400;
     width = 250;
@@ -55,6 +59,9 @@ class Endboss extends MovableObject {
     ];
 
 
+    /**
+     * Erstellt den Endboss am Ende des Levels und lädt alle Animationsbilder.
+     */
     constructor(){
         super();
         this.loadImage(this.IMAGES_ALERT[0]);
@@ -68,34 +75,74 @@ class Endboss extends MovableObject {
         this.animate();
     }
 
+
+    /**
+     * Steuert den Animationszustand des Endbosses: Tod, Patrouille, Alarm,
+     * Verletzung, Angriff oder Laufen – je nach aktuellem Zustand.
+     */
     animate(){
         setStoppableInterval(() => {
-            if (this.isDead()) {
-                this.playDeadAnimation();
-                return;
-            }
-            if (!this.hadFirstContact) {
-                this.patrol();
-                return;
-            }
-            if (Date.now() < this.alertUntil) {
-                this.playAnimation(this.IMAGES_ALERT);
-                return;
-            }
-            if (this.isHurt()) {
-                this.playAnimation(this.IMAGES_HURT);
-                return;
-            }
-            if (this.isAttacking()) {
-                this.playAnimation(this.IMAGES_ATTACK);
-            } else {
-                this.moveLeft();
-                this.otherDirection = false;
-                this.playAnimation(this.IMAGES_WALKING);
-            }
+            this.updateAnimationState();
         }, 200);
     }
 
+
+    /**
+     * Wählt je nach Zustand die passende Animation: zuerst Tod/Patrouille/
+     * Alarm, danach Verletzung, zuletzt Angriff oder Laufen.
+     */
+    updateAnimationState() {
+        if (this.handleSpecialStates()) {
+            return;
+        }
+        if (this.isHurt()) {
+            this.playAnimation(this.IMAGES_HURT);
+            return;
+        }
+        this.walkOrAttack();
+    }
+
+
+    /**
+     * Behandelt Tod, Patrouille und Alarm-Phase.
+     * @returns {boolean} true, wenn einer dieser Zustände aktiv war.
+     */
+    handleSpecialStates() {
+        if (this.isDead()) {
+            this.playDeadAnimation();
+            return true;
+        }
+        if (!this.hadFirstContact) {
+            this.patrol();
+            return true;
+        }
+        if (Date.now() < this.alertUntil) {
+            this.playAnimation(this.IMAGES_ALERT);
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * Greift an, wenn der Charakter nah genug ist, sonst läuft der
+     * Endboss weiter Richtung Spieler.
+     */
+    walkOrAttack() {
+        if (this.isAttacking()) {
+            this.playAnimation(this.IMAGES_ATTACK);
+        } else {
+            this.moveLeft();
+            this.otherDirection = false;
+            this.playAnimation(this.IMAGES_WALKING);
+        }
+    }
+
+
+    /**
+     * Lässt den Endboss zwischen zwei festen x-Positionen hin- und
+     * herlaufen, solange noch kein Kontakt zum Spieler stattgefunden hat.
+     */
     patrol() {
         if (this.x <= this.patrolLeftX) {
             this.patrolDirection = 1;
@@ -112,10 +159,20 @@ class Endboss extends MovableObject {
         this.playAnimation(this.IMAGES_WALKING);
     }
 
+
+    /**
+     * Prüft, ob der Charakter nah genug ist, damit der Endboss angreift.
+     * @returns {boolean} true, wenn der Abstand zum Charakter unter 150px liegt.
+     */
     isAttacking() {
         return this.world && Math.abs(this.x - this.world.character.x) < 150;
     }
 
+
+    /**
+     * Spielt die Todesanimation ab und löst beim ersten Aufruf Sound und
+     * den verzögerten Gewinn-Screen aus.
+     */
     playDeadAnimation() {
         this.playAnimation(this.IMAGES_DEAD);
         if (!this.deadAnimationPlaying) {

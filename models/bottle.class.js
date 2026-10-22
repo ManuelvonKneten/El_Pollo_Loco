@@ -1,3 +1,7 @@
+/**
+ * Flasche am Boden, die eingesammelt werden kann, um den Flaschenvorrat
+ * zum Werfen zu erhöhen.
+ */
 class Bottle extends MovableObject {
     IMAGES_GROUND = [
         'img/6_salsa_bottle/1_salsa_bottle_on_ground.png',
@@ -8,6 +12,12 @@ class Bottle extends MovableObject {
     height = 70;
     y = 390;
 
+
+    /**
+     * Erstellt eine liegende Flasche mit zufälliger Grafik an der
+     * angegebenen x-Position.
+     * @param {number} x - x-Position der Flasche.
+     */
     constructor(x) {
         super();
         this.x = x;

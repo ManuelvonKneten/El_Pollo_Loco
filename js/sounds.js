@@ -1,5 +1,7 @@
+/** Mute-Zustand, wird aus localStorage wiederhergestellt, damit er Reloads übersteht. */
 let soundsMuted = localStorage.getItem('soundsMuted') === 'true';
 
+/** Zuordnung von Sound-Namen zu den jeweiligen Audiodateien. */
 const SOUND_FILES = {
     jump: 'audio/jump.mp3',
     coin: 'audio/pick_coin.mp3',
@@ -18,6 +20,11 @@ let backgroundMusic = new Audio('audio/background_music.mp3');
 backgroundMusic.loop = true;
 backgroundMusic.volume = 0.3;
 
+
+/**
+ * Spielt einen einmaligen Soundeffekt ab, sofern der Sound nicht stummgeschaltet ist.
+ * @param {string} name - Schlüssel aus SOUND_FILES.
+ */
 function playSound(name) {
     if (soundsMuted) {
         return;
@@ -27,6 +34,10 @@ function playSound(name) {
     sound.play().catch(() => {});
 }
 
+
+/**
+ * Startet die Hintergrundmusik (Endlosschleife), sofern nicht stummgeschaltet.
+ */
 function playMusic() {
     if (soundsMuted) {
         return;
@@ -34,11 +45,20 @@ function playMusic() {
     backgroundMusic.play().catch(() => {});
 }
 
+
+/**
+ * Stoppt die Hintergrundmusik und setzt sie auf den Anfang zurück.
+ */
 function stopMusic() {
     backgroundMusic.pause();
     backgroundMusic.currentTime = 0;
 }
 
+
+/**
+ * Schaltet Musik/Sound stumm bzw. wieder an, speichert den Zustand in
+ * localStorage und aktualisiert alle Mute-Buttons.
+ */
 function toggleMute() {
     soundsMuted = !soundsMuted;
     localStorage.setItem('soundsMuted', soundsMuted);
@@ -50,6 +70,11 @@ function toggleMute() {
     updateMuteButtons();
 }
 
+
+/**
+ * Aktualisiert Icon bzw. Text aller Mute-Buttons passend zum aktuellen
+ * Mute-Zustand.
+ */
 function updateMuteButtons() {
     document.querySelectorAll('.mute_button').forEach(btn => {
         let icon = btn.querySelector('img');

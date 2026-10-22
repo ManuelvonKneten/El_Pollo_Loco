@@ -1,3 +1,7 @@
+/**
+ * Zentrale Spielwelt-Klasse: hält Charakter, Level und HUD, zeichnet jeden
+ * Frame und prüft laufend Kollisionen, Flaschenwürfe und Endboss-Kontakt.
+ */
 class World {
     character = new Character();
     level = level1;
@@ -16,6 +20,12 @@ class World {
     endbossBar;
 
 
+    /**
+     * Erstellt die Spielwelt, legt die HUD-Statusbars an und startet
+     * Zeichnen sowie die laufende Spiellogik.
+     * @param {HTMLCanvasElement} canvas - Das Canvas-Element des Spiels.
+     * @param {Keyboard} keyboard - Globales Tastatur-Statusobjekt.
+     */
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
@@ -32,11 +42,21 @@ class World {
         this.run();
     }
 
+
+    /**
+     * Verknüpft Charakter und Endboss mit dieser Welt, damit beide auf
+     * Keyboard, Level und Kamera zugreifen können.
+     */
     setWorld(){
         this.character.world = this;
         this.level.endboss.world = this;
     }
 
+
+    /**
+     * Zentraler Spiel-Loop (60fps): prüft Kollisionen, Flaschenwürfe,
+     * Endboss-Kontakt und ob der Charakter gestorben ist.
+     */
     run() {
         setStoppableInterval(() => {
             if (this.gameEnded) {
@@ -51,6 +71,11 @@ class World {
         }, 1000 / 60);
     }
 
+
+    /**
+     * Aktiviert beim ersten Erreichen der Boss-Zone die Alarm-Animation
+     * und blendet danach die Endboss-Statusbar ein.
+     */
     checkEndbossContact() {
         if (!this.level.endboss.hadFirstContact && this.character.x > this.level.bossZoneX) {
             this.level.endboss.hadFirstContact = true;
@@ -59,35 +84,81 @@ class World {
         }
     }
 
+
+    /**
+     * Prüft alle Kollisionen eines Frames: Münzen/Flaschen einsammeln,
+     * Gegnerkontakt (Sprung-Kill oder Schaden) und Flaschentreffer.
+     */
     checkCollisions() {
+        this.checkCoinPickups();
+        this.checkBottlePickups();
+        this.checkEnemyContact();
+        this.checkThrowableHits();
+    }
+
+
+    /**
+     * Prüft, ob der Charakter eine Münze erreicht hat, und sammelt sie ein.
+     */
+    checkCoinPickups() {
         this.level.coins.forEach((coin) => {
             if (this.character.isCollingPickup(coin)) {
                 this.collectCoin(coin);
             }
         });
+    }
 
+
+    /**
+     * Prüft, ob der Charakter eine Flasche am Boden erreicht hat, und
+     * sammelt sie ein.
+     */
+    checkBottlePickups() {
         this.level.bottles.forEach((bottle) => {
             if (this.character.isCollingPickup(bottle)) {
                 this.collectBottle(bottle);
             }
         });
+    }
 
+
+    /**
+     * Prüft den Kontakt zwischen Charakter und Gegnern: Sprung von oben
+     * besiegt den Gegner, seitlicher Kontakt verletzt den Charakter.
+     */
+    checkEnemyContact() {
         this.level.enemies.forEach((enemy) => {
             if (enemy.dead || !this.character.isColling(enemy)) {
                 return;
             }
-            let jumpedOnTop = !(enemy instanceof Endboss) &&
-                this.character.speedY < 0 &&
-                this.character.y + this.character.height < enemy.y + enemy.height / 2;
-
-            if (jumpedOnTop) {
+            if (this.isJumpedOnTop(enemy)) {
                 this.defeatEnemyByJump(enemy);
             } else if (!this.character.isHurt()) {
                 this.character.hit();
                 playSound('playerHurt');
             }
         });
+    }
 
+
+    /**
+     * Prüft, ob der Charakter fallend von oben auf den Gegner trifft
+     * (zählt beim Endboss nie als Sprungangriff).
+     * @param {MovableObject} enemy - Der mögliche Gegner.
+     * @returns {boolean} true bei einem gültigen Sprung-Kill.
+     */
+    isJumpedOnTop(enemy) {
+        return !(enemy instanceof Endboss) &&
+            this.character.speedY < 0 &&
+            this.character.y + this.character.height < enemy.y + enemy.height * 0.75;
+    }
+
+
+    /**
+     * Prüft, ob geworfene Flaschen einen Gegner treffen, und entfernt
+     * Flaschen, deren Splash-Animation bereits abgelaufen ist.
+     */
+    checkThrowableHits() {
         this.throwableObjects.forEach((bottle) => {
             if (bottle.hasHit) {
                 return;
@@ -102,6 +173,12 @@ class World {
         this.throwableObjects = this.throwableObjects.filter(b => !b.hasHit || (Date.now() - b.splashStartTime < 400));
     }
 
+
+    /**
+     * Entfernt eine eingesammelte Münze aus dem Level und aktualisiert
+     * Zähler und Coin-Statusbar.
+     * @param {Coin} coin - Die eingesammelte Münze.
+     */
     collectCoin(coin) {
         this.level.coins = this.level.coins.filter(c => c !== coin);
         this.coinsCollected++;
@@ -109,6 +186,12 @@ class World {
         playSound('coin');
     }
 
+
+    /**
+     * Entfernt eine eingesammelte Flasche aus dem Level und erhöht den
+     * Flaschenvorrat des Charakters.
+     * @param {Bottle} bottle - Die eingesammelte Flasche.
+     */
     collectBottle(bottle) {
         this.level.bottles = this.level.bottles.filter(b => b !== bottle);
         this.bottlesAvailable++;
@@ -116,6 +199,12 @@ class World {
         playSound('bottleCollect');
     }
 
+
+    /**
+     * Besiegt einen Gegner durch Sprungangriff: Gegner stirbt, Charakter
+     * erhält einen kleinen Rückprall nach oben.
+     * @param {MovableObject} enemy - Der besiegte Gegner.
+     */
     defeatEnemyByJump(enemy) {
         enemy.die();
         this.character.speedY = 15;
@@ -125,6 +214,14 @@ class World {
         }, 800);
     }
 
+
+    /**
+     * Verarbeitet einen Flaschentreffer: lässt die Flasche platzen und
+     * fügt dem Gegner Schaden zu (Endboss verliert Energie, normale
+     * Gegner sterben sofort).
+     * @param {ThrowableObject} bottle - Die treffende Flasche.
+     * @param {MovableObject} enemy - Der getroffene Gegner.
+     */
     hitEnemyWithBottle(bottle, enemy) {
         bottle.splash();
         playSound('bottleHit');
@@ -142,6 +239,11 @@ class World {
         }
     }
 
+
+    /**
+     * Erzeugt bei Tastendruck D eine neue Flasche, sofern Vorrat
+     * vorhanden ist, und reduziert den Flaschenvorrat um eins.
+     */
     checkThrowObjects() {
         if (this.keyboard.D && this.bottlesAvailable > 0) {
             let spawnX = this.character.otherDirection ? this.character.x - 20 : this.character.x + 100;
@@ -153,9 +255,24 @@ class World {
         this.keyboard.D = false;
     }
 
-    draw() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+    /**
+     * Zeichnet einen kompletten Frame: Hintergrund, Spielobjekte, HUD,
+     * und plant sich selbst für den nächsten Frame erneut ein.
+     */
+    draw() {
+        this.drawWorldObjects();
+        this.drawHud();
+        this.scheduleNextFrame();
+    }
+
+
+    /**
+     * Zeichnet Hintergrund, Charakter, Gegner und Sammelobjekte innerhalb
+     * der Kameraverschiebung.
+     */
+    drawWorldObjects() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.camera_x, 0);
 
         this.addObjectsToMap(this.level.backgroundObjects);
@@ -167,7 +284,13 @@ class World {
         this.addObjectsToMap(this.throwableObjects);
 
         this.ctx.translate(-this.camera_x, 0);
+    }
 
+
+    /**
+     * Zeichnet die Statusbars und den HUD-Text, scrollfest über dem Spiel.
+     */
+    drawHud() {
         this.statusBar.setPercentage(this.character.energy);
         this.addToMap(this.statusBar);
         this.addToMap(this.coinBar);
@@ -176,18 +299,27 @@ class World {
             this.addToMap(this.endbossBar);
         }
         this.drawHudText();
+    }
 
+
+    /**
+     * Plant den nächsten Zeichen-Frame, sofern das Spiel noch läuft.
+     */
+    scheduleNextFrame() {
         if (this.gameEnded) {
             return;
         }
-
-        // Draw() wird immer wieder aufgerufen
         let self = this;
         requestAnimationFrame(function () {
             self.draw();
         });
     }
 
+
+    /**
+     * Zeichnet die Zahlenwerte (Coins, Flaschen, Endboss-Prozent) mit
+     * Kontur zentriert auf die jeweilige Statusbar.
+     */
     drawHudText() {
         this.ctx.font = 'bold 12px Arial';
         this.ctx.lineWidth = 2;
@@ -204,17 +336,35 @@ class World {
         this.ctx.textAlign = 'left';
     }
 
+
+    /**
+     * Zeichnet Text mit schwarzer Kontur für bessere Lesbarkeit.
+     * @param {string} text - Anzuzeigender Text.
+     * @param {number} x - x-Position.
+     * @param {number} y - y-Position (Textgrundlinie).
+     */
     drawOutlinedText(text, x, y) {
         this.ctx.strokeText(text, x, y);
         this.ctx.fillText(text, x, y);
     }
 
+
+    /**
+     * Zeichnet eine Liste von Objekten nacheinander auf den Canvas.
+     * @param {DrawableObject[]} objects - Zu zeichnende Objekte.
+     */
     addObjectsToMap(objects) {
         objects.forEach(o => {
             this.addToMap(o);
         })
     }
 
+
+    /**
+     * Zeichnet ein einzelnes Objekt, spiegelt es dabei horizontal, wenn
+     * es in die andere Richtung blickt (otherDirection).
+     * @param {DrawableObject} mo - Das zu zeichnende Objekt.
+     */
     addToMap(mo) {
         if (mo.otherDirection) {
             this.flipImage(mo);
@@ -226,6 +376,13 @@ class World {
             this.flipImageBack(mo);
         }
     }
+
+
+    /**
+     * Spiegelt den Zeichenkontext horizontal, um ein Objekt seitenverkehrt
+     * darzustellen.
+     * @param {DrawableObject} mo - Das zu spiegelnde Objekt.
+     */
     flipImage(mo){
             this.ctx.save();
             this.ctx.translate(mo.width, 0);
@@ -233,6 +390,11 @@ class World {
             mo.x = mo.x * -1;
     }
 
+
+    /**
+     * Macht die Spiegelung des Zeichenkontexts wieder rückgängig.
+     * @param {DrawableObject} mo - Das zuvor gespiegelte Objekt.
+     */
     flipImageBack(mo) {
             mo.x = mo.x * -1;
             this.ctx.restore();

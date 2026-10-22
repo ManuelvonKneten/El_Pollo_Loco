@@ -1,5 +1,12 @@
+/** Aktuell geladenes Level, wird bei jedem Spielstart neu erzeugt. */
 let level1;
 
+
+/**
+ * Baut Level 1 komplett neu auf (Gegner, Wolken, Hintergrund, Münzen,
+ * Flaschen). Wird bei jedem Spielstart/Neustart aufgerufen, damit keine
+ * alten Objekte aus der vorherigen Runde übrig bleiben.
+ */
 function initLevel1() {
 
     level1 = new Level(

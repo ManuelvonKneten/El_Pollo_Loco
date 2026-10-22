@@ -1,3 +1,6 @@
+/**
+ * Kleinere, schnellere Variante des normalen Huhns.
+ */
 class ChickenSmall extends MovableObject {
         y = 390;
         height = 50;
@@ -11,18 +14,27 @@ class ChickenSmall extends MovableObject {
         ];
         currentImage = 0;
 
+
+    /**
+     * Erstellt ein kleines Huhn an einer zufälligen Position mit höherer
+     * Geschwindigkeit als das normale Huhn.
+     */
     constructor(){
         super();
         this.loadImage(this.IMAGES_WALKING[0]);
         this.loadImages(this.IMAGES_WALKING);
         this.loadImages([this.IMAGE_DEAD]);
 
-        this.x = 200 + Math.random() * 2000;
+        this.x = 400 + Math.random() * 1800;
         this.speed = 0.25 + Math.random() * 0.35;
         this.animate();
     }
 
 
+    /**
+     * Bewegt das Huhn kontinuierlich nach links und spielt die
+     * Laufanimation ab, solange es nicht besiegt wurde.
+     */
     animate(){
         setStoppableInterval(() => {
             if (!this.dead) {
@@ -37,6 +49,11 @@ class ChickenSmall extends MovableObject {
         }, 150);
     }
 
+
+    /**
+     * Markiert das Huhn als besiegt, stoppt die Bewegung und zeigt das
+     * Tod-Bild an.
+     */
     die() {
         this.dead = true;
         this.speed = 0;

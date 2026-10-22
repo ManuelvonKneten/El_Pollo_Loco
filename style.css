@@ -172,6 +172,7 @@ canvas {
 #options_screen,
 #impressum_screen {
     z-index: 4;
+    background-color: rgba(0, 0, 0, 0.7);
 }
 
 .impressum_content {
