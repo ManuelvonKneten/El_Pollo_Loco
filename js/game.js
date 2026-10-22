@@ -17,18 +17,28 @@ function stopAllIntervals() {
 function init(){
     canvas = document.getElementById('canvas');
     showStartScreen();
+    bindMobileControls();
+    window.addEventListener('resize', checkOrientation);
+    window.addEventListener('orientationchange', checkOrientation);
+    checkOrientation();
 }
 
 function showStartScreen() {
     document.getElementById('start_screen').classList.remove('d_none');
     document.getElementById('game_over_screen').classList.add('d_none');
     document.getElementById('win_screen').classList.add('d_none');
+    document.getElementById('ingame_controls').classList.add('d_none');
+    document.getElementById('mobile_controls').classList.add('d_none');
 }
 
 function startGame() {
     document.getElementById('start_screen').classList.add('d_none');
     document.getElementById('game_over_screen').classList.add('d_none');
     document.getElementById('win_screen').classList.add('d_none');
+    document.getElementById('ingame_controls').classList.remove('d_none');
+    if (isMobile()) {
+        document.getElementById('mobile_controls').classList.remove('d_none');
+    }
 
     stopAllIntervals();
     initLevel1();
@@ -44,6 +54,8 @@ function gameOver() {
     stopAllIntervals();
     stopMusic();
     playSound('gameOver');
+    document.getElementById('ingame_controls').classList.add('d_none');
+    document.getElementById('mobile_controls').classList.add('d_none');
     document.getElementById('game_over_screen').classList.remove('d_none');
 }
 
@@ -56,7 +68,46 @@ function gameWon() {
     stopMusic();
     playSound('win');
     document.getElementById('won_coins').innerText = world.coinsCollected + ' / ' + world.level.totalCoins;
+    document.getElementById('ingame_controls').classList.add('d_none');
+    document.getElementById('mobile_controls').classList.add('d_none');
     document.getElementById('win_screen').classList.remove('d_none');
+}
+
+function isMobile() {
+    const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+    return regex.test(navigator.userAgent);
+}
+
+function checkOrientation() {
+    if (!isMobile()) {
+        document.getElementById('rotate_device').classList.add('d_none');
+        return;
+    }
+    let isPortrait = window.innerHeight > window.innerWidth;
+    document.getElementById('rotate_device').classList.toggle('d_none', !isPortrait);
+}
+
+function bindMobileControls() {
+    bindTouchButton('mobile_left', 'LEFT');
+    bindTouchButton('mobile_right', 'RIGHT');
+    bindTouchButton('mobile_jump', 'SPACE');
+    bindTouchButton('mobile_throw', 'D');
+}
+
+function bindTouchButton(buttonId, keyboardField) {
+    let button = document.getElementById(buttonId);
+    button.addEventListener('touchstart', (event) => {
+        if (event.cancelable) {
+            event.preventDefault();
+        }
+        keyboard[keyboardField] = true;
+    });
+    button.addEventListener('touchend', (event) => {
+        if (event.cancelable) {
+            event.preventDefault();
+        }
+        keyboard[keyboardField] = false;
+    });
 }
 
 function restartGame() {

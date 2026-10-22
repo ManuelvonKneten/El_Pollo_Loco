@@ -51,6 +51,11 @@ function toggleMute() {
 
 function updateMuteButtons() {
     document.querySelectorAll('.mute_button').forEach(btn => {
-        btn.innerText = soundsMuted ? '🔇 Musik an' : '🔊 Musik aus';
+        let icon = btn.querySelector('img');
+        if (icon) {
+            icon.src = soundsMuted ? 'img/icons/mute.png' : 'img/icons/audio.png';
+        } else {
+            btn.innerText = soundsMuted ? '🔇 Musik an' : '🔊 Musik aus';
+        }
     });
 }

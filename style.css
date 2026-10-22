@@ -17,11 +17,10 @@ body {
     align-items: center;
     text-align: center;
     color: white;
-    font-family: Arial, sans-serif;
+    font-family: 'Zabars', Arial, Helvetica, sans-serif;
 }
 
 h1, h2 {
-    font-family: 'Zabars', Arial, Helvetica, sans-serif;
     letter-spacing: 1px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
@@ -81,7 +80,8 @@ canvas {
 
 .overlay_button {
     padding: 10px 24px;
-    font-size: 16px;
+    font-size: 22px;
+    letter-spacing: 1px;
     cursor: pointer;
     border: none;
     border-radius: 6px;
@@ -94,14 +94,76 @@ canvas {
     background-color: #ffbb55;
 }
 
+.ingame_controls {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    gap: 10px;
+}
+
+.icon_button {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.icon_button img {
+    display: block;
+    width: 28px;
+    height: 28px;
+    padding: 10px;
+    border-radius: 50%;
+    background-color: #e8a33d;
+}
+
+.icon_button:hover img {
+    background-color: #ffbb55;
+}
+
+.mobile_controls {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 20px 20px 20px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.mobile_controls_left,
+.mobile_controls_right {
+    display: flex;
+    gap: 10px;
+    pointer-events: auto;
+}
+
+.rotate_icon {
+    width: 64px;
+    height: 64px;
+}
+
+#rotate_device {
+    z-index: 3;
+}
+
 .controls_table {
     color: white;
     border-collapse: collapse;
+    font-size: 18px;
 }
 
 .controls_table td {
     padding: 4px 10px;
     text-align: left;
+}
+
+.overlay_content p {
+    font-size: 20px;
 }
 
 .d_none {

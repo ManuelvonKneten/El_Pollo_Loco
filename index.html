@@ -33,6 +33,29 @@
     <div id="game_container">
         <canvas id="canvas" width="720" height="480"></canvas>
 
+        <div id="ingame_controls" class="ingame_controls d_none">
+            <button class="icon_button" onclick="backToMenu()"><img src="img/icons/settings.png" alt="Menü"></button>
+            <button class="icon_button mute_button" onclick="toggleMute()"><img src="img/icons/audio.png" alt="Sound"></button>
+        </div>
+
+        <div id="mobile_controls" class="mobile_controls d_none">
+            <div class="mobile_controls_left">
+                <button id="mobile_left" class="icon_button"><img src="img/icons/backw.png" alt="Links"></button>
+                <button id="mobile_right" class="icon_button"><img src="img/icons/forw.png" alt="Rechts"></button>
+            </div>
+            <div class="mobile_controls_right">
+                <button id="mobile_jump" class="icon_button"><img src="img/icons/upw.png" alt="Springen"></button>
+                <button id="mobile_throw" class="icon_button"><img src="img/icons/throw.png" alt="Werfen"></button>
+            </div>
+        </div>
+
+        <div id="rotate_device" class="game_overlay d_none">
+            <div class="overlay_content">
+                <h2>Bitte drehe dein Gerät</h2>
+                <img src="img/icons/rotate-smartphone.png" alt="" class="rotate_icon">
+            </div>
+        </div>
+
         <div id="start_screen" class="game_overlay">
             <img class="screen_background" src="img/9_intro_outro_screens/start/startscreen_1.png" alt="">
             <div class="overlay_content">
