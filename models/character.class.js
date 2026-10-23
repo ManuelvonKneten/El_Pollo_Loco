@@ -141,7 +141,7 @@ class Character extends MovableObject {
      * Bewegt den Charakter nach links/rechts, sofern innerhalb der Levelgrenzen.
      */
     handleHorizontalMovement() {
-        if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+        if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x && this.x < this.world.level.endboss.x) {
             this.moveRight();
             this.otherDirection = false;
             this.lastActionTime = new Date().getTime();
