@@ -15,12 +15,15 @@ Das Spiel läuft komplett im Browser auf einem HTML `<canvas>`-Element und ist i
 ## ✨ Features
 
 - 🏃 Lauf-, Sprung- und Wurf-Steuerung für die Spielfigur (Tastatur und Touch)
-- 🐓 Normale Gegner (Hühner), die durch Sprung von oben oder Flaschenwurf besiegt werden können
+- 😴 Idle- und Sleep-Animation, wenn Pepe länger nicht bewegt wird
+- 🐓 Normale und kleine Hühner, die durch Sprung von oben oder Flaschenwurf besiegt werden können
 - 👹 Endgegner mit eigener Lebensanzeige, Alert-/Angriffs-Animationen und Patrouillenverhalten
 - 🪙 Sammelbare Münzen und Flaschen mit eigenen Statusbars im HUD
 - 🏁 Start-, Game-Over- und Gewinn-Screen mit Neustart-Funktion
-- 🔊 Musik und Soundeffekte mit Mute-Funktion (Taste `M` oder Button)
-- 📱 Mobile Touch-Steuerung inkl. Hinweis zum Drehen des Geräts ins Querformat
+- ⚙️ Einstellungen-Menü mit Impressum
+- 🔊 Musik und Soundeffekte mit Mute-Funktion (Taste `M` oder Button), Zustand bleibt per `localStorage` erhalten
+- 📱 Mobile Touch-Steuerung inkl. Hinweis zum Drehen des Geräts ins Querformat, responsives Menü ohne Scrollbalken auch auf kleinen Displays
+- 🖥️ Vollbild-Modus: echtes Vollbild per Klick auf Desktop/Android; auf iPhone (Safari/Chrome) nur über Installation als PWA ("Zum Home-Bildschirm hinzufügen") möglich – siehe Abschnitt Technik
 
 ## 🎮 Steuerung
 
@@ -50,11 +53,14 @@ Anschließend im Browser `http://localhost:8000` öffnen.
 El_Pollo_Loco/
 ├── index.html                       Einstiegspunkt, Canvas und UI-Overlays
 ├── style.css                        Layout, Overlays, Theme
+├── manifest.json                    Web-App-Manifest (PWA, Vollbild auf iOS)
+├── robots.txt                       Crawler-Freigabe
+├── .htaccess                        Erzwingt HTTPS, setzt HSTS-Header
 ├── audio/                           Musik & Soundeffekte (.mp3)
-├── fonts/                           Zabars.ttf
+├── fonts/                           Zabars.ttf, Roboto (self-hosted, kein Google-Fonts-CDN)
 ├── img/                             Sprites, Hintergründe, Icons, Statusbars
 ├── js/
-│   ├── game.js                      Spielzustand (Start/Game Over/Gewinn/Neustart), Tastatur & Touch
+│   ├── game.js                      Spielzustand (Start/Game Over/Gewinn/Neustart), Tastatur, Touch & Vollbild
 │   ├── sounds.js                    Sound- und Musikwiedergabe
 │   └── levels/
 │       └── level1.js                Aufbau des ersten Levels
@@ -63,6 +69,7 @@ El_Pollo_Loco/
     ├── movable-object.class.js      Basisklasse: Bewegung, Schwerkraft, Kollision
     ├── character.class.js           Spielfigur (Pepe)
     ├── chicken.class.js             Normale Gegner
+    ├── chicken-small.class.js       Kleine Gegner
     ├── endboss.class.js             Endgegner
     ├── throwable-objects.class.js   Geworfene Flaschen
     ├── coin.class.js                Sammelobjekt: Münze
@@ -80,6 +87,9 @@ El_Pollo_Loco/
 - Reines Vanilla JavaScript (ES6-Klassen), kein Framework
 - Rendering über die HTML5-Canvas-API
 - Keine Build-Schritte oder Abhängigkeiten nötig
+- Alle Schriftarten (Zabars, Roboto) werden lokal ausgeliefert, keine externen Anfragen an Google Fonts
+- Installierbar als Progressive Web App (`manifest.json`) – auf iOS ist das "Zum Home-Bildschirm hinzufügen" der einzige Weg zu echtem Vollbild, da Safari/Chrome auf iOS (beide WebKit) die Fullscreen API für normale Seiten-Elemente grundsätzlich nicht unterstützen
+- `.htaccess` erzwingt HTTPS (301-Redirect) und setzt einen HSTS-Header (Apache-Hosting vorausgesetzt)
 
 ---
 
