@@ -4,6 +4,8 @@
 
 **Ein 2D-Jump-and-Run im Browser** — Pepe läuft durch die Wüste, sammelt Münzen und Flaschen, besiegt Hühner und stellt sich am Ende einem Endgegner.
 
+**🎮 [Live spielen](https://pollo.manuel-von-kneten.de/)**
+
 ![Screenshot](screenshot.png)
 
 </div>
