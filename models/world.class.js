@@ -32,8 +32,8 @@ class World {
         this.keyboard = keyboard;
 
         this.statusBar = new StatusBar(STATUSBAR_IMAGES_HEALTH, 20, 0);
-        this.coinBar = new StatusBar(STATUSBAR_IMAGES_COIN, 20, 50);
-        this.bottleBar = new StatusBar(STATUSBAR_IMAGES_BOTTLE, 20, 100);
+        this.coinBar = new StatusBar(STATUSBAR_IMAGES_COIN, 20, 32);
+        this.bottleBar = new StatusBar(STATUSBAR_IMAGES_BOTTLE, 20, 64);
         this.endbossBar = new StatusBar(STATUSBAR_IMAGES_ENDBOSS, 500, 0);
         this.bottleBar.setPercentage(0);
 
