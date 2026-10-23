@@ -38,7 +38,6 @@ function init(){
     window.addEventListener('resize', checkOrientation);
     window.addEventListener('orientationchange', checkOrientation);
     document.addEventListener('fullscreenchange', updateFullscreenButtons);
-    hideFullscreenButtonsIfUnsupported();
     checkOrientation();
 }
 
@@ -254,8 +253,9 @@ function closeImpressumToOptions() {
 
 /**
  * Wechselt zwischen Vollbild- und normalem Modus für den Spielcontainer.
- * iPhone Safari unterstützt die Fullscreen API für normale Elemente nicht,
- * dort bleibt der Button ohne Effekt.
+ * Browser ohne Fullscreen API (iOS Safari/Chrome) bekommen stattdessen
+ * nur die ausgeblendete Adressleiste - echtes Vollbild geht dort nur
+ * über "Zum Home-Bildschirm hinzufügen" (siehe PWA-Manifest).
  */
 function toggleFullscreen() {
     if (document.fullscreenElement) {
@@ -265,6 +265,8 @@ function toggleFullscreen() {
     let container = document.getElementById('game_container');
     if (container.requestFullscreen) {
         container.requestFullscreen().catch(() => {});
+    } else {
+        hideMobileAddressBar();
     }
 }
 
@@ -282,14 +284,18 @@ function updateFullscreenButtons() {
 
 
 /**
- * Blendet die Vollbild-Buttons aus, wenn der Browser die Fullscreen API
- * nicht unterstützt (z.B. iOS Safari/Chrome - dort hilft nur "Zum
- * Home-Bildschirm hinzufügen" über das PWA-Manifest).
+ * Blendet die mobile Adressleiste per Scroll-Trick aus, sofern die
+ * Fullscreen API fehlt. Macht die Seite dafür kurz höher als den
+ * sichtbaren Bereich, scrollt sie weg und setzt die Höhe zurück.
  */
-function hideFullscreenButtonsIfUnsupported() {
-    if (!document.fullscreenEnabled) {
-        document.querySelectorAll('.fullscreen_button').forEach(btn => btn.classList.add('d_none'));
-    }
+function hideMobileAddressBar() {
+    let original = document.documentElement.style.minHeight;
+    document.documentElement.style.minHeight = (window.innerHeight + 100) + 'px';
+    window.scrollTo(0, 1);
+    setTimeout(() => {
+        window.scrollTo(0, 1);
+        document.documentElement.style.minHeight = original;
+    }, 300);
 }
 
 
