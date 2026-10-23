@@ -38,6 +38,7 @@ function init(){
     window.addEventListener('resize', checkOrientation);
     window.addEventListener('orientationchange', checkOrientation);
     document.addEventListener('fullscreenchange', updateFullscreenButtons);
+    setupFullscreenButtons();
     checkOrientation();
 }
 
@@ -253,9 +254,9 @@ function closeImpressumToOptions() {
 
 /**
  * Wechselt zwischen Vollbild- und normalem Modus für den Spielcontainer.
- * Browser ohne Fullscreen API (iOS Safari/Chrome) bekommen stattdessen
- * nur die ausgeblendete Adressleiste - echtes Vollbild geht dort nur
- * über "Zum Home-Bildschirm hinzufügen" (siehe PWA-Manifest).
+ * Fehlt die Fullscreen API (iOS Safari/Chrome), zeigt der Button
+ * stattdessen einen Hinweis - echtes Vollbild geht dort nur über
+ * "Zum Home-Bildschirm hinzufügen" (siehe PWA-Manifest).
  */
 function toggleFullscreen() {
     if (document.fullscreenElement) {
@@ -266,7 +267,7 @@ function toggleFullscreen() {
     if (container.requestFullscreen) {
         container.requestFullscreen().catch(() => {});
     } else {
-        hideMobileAddressBar();
+        alert('Echtes Vollbild geht auf diesem Gerät nur über "Zum Home-Bildschirm hinzufügen" (Teilen-Symbol in der Browser-Leiste).');
     }
 }
 
@@ -284,18 +285,27 @@ function updateFullscreenButtons() {
 
 
 /**
- * Blendet die mobile Adressleiste per Scroll-Trick aus, sofern die
- * Fullscreen API fehlt. Macht die Seite dafür kurz höher als den
- * sichtbaren Bereich, scrollt sie weg und setzt die Höhe zurück.
+ * Passt die Vollbild-Buttons an, falls die Fullscreen API fehlt: Läuft das
+ * Spiel bereits als installierte PWA (echtes Vollbild aktiv), verschwinden
+ * die Buttons. Im normalen Browser-Tab zeigen sie stattdessen ein
+ * "Zum Home-Bildschirm"-Icon, das beim Antippen den Hinweis erklärt.
  */
-function hideMobileAddressBar() {
-    let original = document.documentElement.style.minHeight;
-    document.documentElement.style.minHeight = (window.innerHeight + 100) + 'px';
-    window.scrollTo(0, 1);
-    setTimeout(() => {
-        window.scrollTo(0, 1);
-        document.documentElement.style.minHeight = original;
-    }, 300);
+function setupFullscreenButtons() {
+    if (document.fullscreenEnabled) {
+        return;
+    }
+    let runningAsInstalledApp = window.navigator.standalone === true ||
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.matchMedia('(display-mode: fullscreen)').matches;
+    document.querySelectorAll('.fullscreen_button').forEach(btn => {
+        if (runningAsInstalledApp) {
+            btn.classList.add('d_none');
+        } else {
+            let icon = btn.querySelector('img');
+            icon.src = 'img/icons/addtohome.png';
+            icon.alt = 'Vollbild-Hinweis';
+        }
+    });
 }
 
 
