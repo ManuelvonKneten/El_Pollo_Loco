@@ -48,7 +48,7 @@ h1 {
 }
 
 h2 {
-    font-size: 32px;
+    font-size: clamp(18px, 6vh, 32px);
 }
 
 canvas {
@@ -90,12 +90,12 @@ canvas {
     position: relative;
     z-index: 1;
     background-color: rgba(0, 0, 0, 0.6);
-    padding: 20px 30px;
+    padding: clamp(8px, 2.5vh, 20px) clamp(14px, 5vw, 30px);
     border-radius: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: clamp(4px, 1.5vh, 12px);
     max-height: 90%;
     overflow-y: auto;
     scrollbar-width: none;
@@ -107,8 +107,8 @@ canvas {
 }
 
 .overlay_button {
-    padding: 10px 24px;
-    font-size: 22px;
+    padding: clamp(5px, 1.3vh, 10px) clamp(14px, 4vw, 24px);
+    font-size: clamp(16px, 3.2vh, 22px);
     letter-spacing: 1px;
     cursor: pointer;
     border: none;
@@ -123,13 +123,13 @@ canvas {
 }
 
 .primary_button {
-    font-size: 26px;
-    padding: 14px 40px;
+    font-size: clamp(16px, 3.8vh, 26px);
+    padding: clamp(7px, 1.8vh, 14px) clamp(20px, 6vw, 40px);
 }
 
 .start_screen_icons {
     display: flex;
-    gap: 14px;
+    gap: clamp(6px, 1.8vh, 14px);
 }
 
 .ingame_controls {
@@ -166,6 +166,12 @@ canvas {
 
 .icon_button:hover img {
     background-color: #ffbb55;
+}
+
+.start_screen_icons .icon_button img {
+    width: clamp(18px, 3.2vh, 28px);
+    height: clamp(18px, 3.2vh, 28px);
+    padding: clamp(5px, 1.3vh, 10px);
 }
 
 .mobile_controls {
@@ -212,20 +218,20 @@ canvas {
 
 .impressum_text {
     text-align: left;
-    font-size: 15px;
-    line-height: 1.5;
+    font-size: clamp(16px, 2.8vh, 17px);
+    line-height: 1.4;
 }
 
 .controls_box {
-    margin-top: 6px;
-    padding-top: 14px;
+    margin-top: clamp(2px, 0.8vh, 6px);
+    padding-top: clamp(5px, 1.8vh, 14px);
     border-top: 1px solid rgba(255, 255, 255, 0.25);
     width: 100%;
 }
 
 .controls_box h3 {
-    margin: 0 0 8px 0;
-    font-size: 14px;
+    margin: 0 0 clamp(2px, 1vh, 8px) 0;
+    font-size: 16px;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 2px;
@@ -235,17 +241,17 @@ canvas {
 .controls_table {
     color: white;
     border-collapse: collapse;
-    font-size: 18px;
+    font-size: clamp(16px, 2.6vh, 18px);
     margin: 0 auto;
 }
 
 .controls_table td {
-    padding: 4px 10px;
+    padding: clamp(1px, 0.6vh, 4px) 10px;
     text-align: left;
 }
 
 .overlay_content p {
-    font-size: 20px;
+    font-size: clamp(16px, 3vh, 20px);
 }
 
 .d_none {
