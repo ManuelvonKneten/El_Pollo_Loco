@@ -38,6 +38,7 @@ function init(){
     window.addEventListener('resize', checkOrientation);
     window.addEventListener('orientationchange', checkOrientation);
     document.addEventListener('fullscreenchange', updateFullscreenButtons);
+    hideFullscreenButtonsIfUnsupported();
     checkOrientation();
 }
 
@@ -277,6 +278,18 @@ function updateFullscreenButtons() {
             ? 'img/icons/fullscreen-exit.png'
             : 'img/icons/fullscreen.png';
     });
+}
+
+
+/**
+ * Blendet die Vollbild-Buttons aus, wenn der Browser die Fullscreen API
+ * nicht unterstützt (z.B. iOS Safari/Chrome - dort hilft nur "Zum
+ * Home-Bildschirm hinzufügen" über das PWA-Manifest).
+ */
+function hideFullscreenButtonsIfUnsupported() {
+    if (!document.fullscreenEnabled) {
+        document.querySelectorAll('.fullscreen_button').forEach(btn => btn.classList.add('d_none'));
+    }
 }
 
 
