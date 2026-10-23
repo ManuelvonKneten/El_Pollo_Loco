@@ -64,7 +64,7 @@ function toggleMute() {
     localStorage.setItem('soundsMuted', soundsMuted);
     if (soundsMuted) {
         backgroundMusic.pause();
-    } else if (typeof world !== 'undefined' && world && !world.gameEnded) {
+    } else if (world && !world.gameEnded) {
         backgroundMusic.play().catch(() => {});
     }
     updateMuteButtons();
