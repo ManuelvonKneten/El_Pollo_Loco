@@ -98,6 +98,12 @@ canvas {
     gap: 12px;
     max-height: 90%;
     overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.overlay_content::-webkit-scrollbar {
+    display: none;
 }
 
 .overlay_button {
