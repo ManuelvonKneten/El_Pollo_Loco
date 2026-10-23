@@ -37,6 +37,7 @@ function init(){
     bindMobileControls();
     window.addEventListener('resize', checkOrientation);
     window.addEventListener('orientationchange', checkOrientation);
+    document.addEventListener('fullscreenchange', updateFullscreenButtons);
     checkOrientation();
 }
 
@@ -247,6 +248,35 @@ function closeImpressum() {
 function closeImpressumToOptions() {
     closeImpressum();
     openOptions();
+}
+
+
+/**
+ * Wechselt zwischen Vollbild- und normalem Modus für den Spielcontainer.
+ * iPhone Safari unterstützt die Fullscreen API für normale Elemente nicht,
+ * dort bleibt der Button ohne Effekt.
+ */
+function toggleFullscreen() {
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+        return;
+    }
+    let container = document.getElementById('game_container');
+    if (container.requestFullscreen) {
+        container.requestFullscreen().catch(() => {});
+    }
+}
+
+
+/**
+ * Aktualisiert Icon aller Vollbild-Buttons passend zum aktuellen Zustand.
+ */
+function updateFullscreenButtons() {
+    document.querySelectorAll('.fullscreen_button').forEach(btn => {
+        btn.querySelector('img').src = document.fullscreenElement
+            ? 'img/icons/fullscreen-exit.png'
+            : 'img/icons/fullscreen.png';
+    });
 }
 
 

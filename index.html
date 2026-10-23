@@ -4,8 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google" content="notranslate">
+    <meta name="theme-color" content="#e8a33d">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="El Pollo Loco">
+    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="apple-touch-icon" href="img/icon-192.png">
     <title>El Pollo Loco</title>
     <script src="models/drawable-objects.class.js" defer></script>
     <script src="models/movable-object.class.js" defer></script>
@@ -35,6 +42,7 @@
         <div id="ingame_controls" class="ingame_controls d_none">
             <button class="icon_button" onclick="openOptions()"><img src="img/icons/settings.png" alt="Einstellungen"></button>
             <button class="icon_button mute_button" onclick="toggleMute()"><img src="img/icons/audio.png" alt="Sound"></button>
+            <button class="icon_button fullscreen_button" onclick="toggleFullscreen()"><img src="img/icons/fullscreen.png" alt="Vollbild"></button>
         </div>
 
         <div id="mobile_controls" class="mobile_controls d_none">
@@ -63,6 +71,7 @@
                 <div class="start_screen_icons">
                     <button class="icon_button mute_button" onclick="toggleMute()"><img src="img/icons/audio.png" alt="Sound"></button>
                     <button class="icon_button" onclick="openOptions()"><img src="img/icons/settings.png" alt="Einstellungen"></button>
+                    <button class="icon_button fullscreen_button" onclick="toggleFullscreen()"><img src="img/icons/fullscreen.png" alt="Vollbild"></button>
                 </div>
                 <div class="controls_box">
                     <h3>Steuerung</h3>
