@@ -138,28 +138,64 @@ class Endboss extends MovableObject {
 
 
     /**
-     * Handles death, patrol, rage attack, and the alert phase.
+     * Handles death, patrol, the alert phase, and rage attacks, in that
+     * order of priority.
      * @returns {boolean} true if one of these states was active.
      */
     handleSpecialStates() {
-        if (this.isDead()) {
-            this.playDeadAnimation();
-            return true;
+        return this.handleDeadState() || this.handlePatrolState() ||
+            this.handleAlertState() || this.handleRagePhase();
+    }
+
+
+    /**
+     * Plays the death animation while dead.
+     * @returns {boolean} true if the endboss is dead.
+     */
+    handleDeadState() {
+        if (!this.isDead()) {
+            return false;
         }
-        if (!this.hadFirstContact) {
-            this.patrol();
-            return true;
+        this.playDeadAnimation();
+        return true;
+    }
+
+
+    /**
+     * Patrols as long as the player hasn't reached the boss zone yet.
+     * @returns {boolean} true if still patrolling.
+     */
+    handlePatrolState() {
+        if (this.hadFirstContact) {
+            return false;
         }
-        if (Date.now() < this.alertUntil) {
-            this.playAnimation(this.IMAGES_ALERT);
-            return true;
+        this.patrol();
+        return true;
+    }
+
+
+    /**
+     * Plays the alert animation during the brief alert window.
+     * @returns {boolean} true if still alerting.
+     */
+    handleAlertState() {
+        if (Date.now() >= this.alertUntil) {
+            return false;
         }
+        this.playAnimation(this.IMAGES_ALERT);
+        return true;
+    }
+
+
+    /**
+     * Triggers the first-contact and rage attacks when due, and reports
+     * whether a rage attack is currently playing out.
+     * @returns {boolean} true while a rage attack is in progress.
+     */
+    handleRagePhase() {
         this.checkFirstContactAttack();
         this.checkRageAttack();
-        if (this.rageState) {
-            return true;
-        }
-        return false;
+        return !!this.rageState;
     }
 
 
