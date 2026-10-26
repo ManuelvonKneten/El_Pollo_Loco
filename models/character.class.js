@@ -10,6 +10,7 @@ class Character extends MovableObject {
     energy = 100;
     offset = { top: 124, right: 35, bottom: 10, left: 35 };
     lastActionTime = 0;
+    jumpFrame = 0;
     IMAGES_IDLE = [
             'img/2_character_pepe/1_idle/idle/I-1.png',
             'img/2_character_pepe/1_idle/idle/I-2.png',
@@ -162,6 +163,7 @@ class Character extends MovableObject {
     handleJumpInput() {
         if ((this.world.keyboard.UP || this.world.keyboard.SPACE) && this.speedY === 0 && !this.isAboveGround()) {
             this.jump();
+            this.jumpFrame = 0;
             playSound('jump');
             this.lastActionTime = new Date().getTime();
         }
@@ -180,11 +182,24 @@ class Character extends MovableObject {
                 return;
             }
             if (this.isAboveGround()) {
-                this.playAnimation(this.IMAGES_JUMPING);
+                this.playJumpAnimation();
             } else {
                 this.playIdleOrWalkAnimation();
             }
         }, 50);
+    }
+
+
+    /**
+     * Plays the jump animation exactly once per jump: advances one
+     * frame per tick, starting at the frame set when the jump began,
+     * and holds on the last frame instead of looping back to the
+     * first while still airborne.
+     */
+    playJumpAnimation() {
+        let i = Math.min(this.jumpFrame, this.IMAGES_JUMPING.length - 1);
+        this.img = this.imageCache[this.IMAGES_JUMPING[i]];
+        this.jumpFrame++;
     }
 
 
