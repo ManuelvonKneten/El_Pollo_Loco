@@ -1,6 +1,7 @@
 /**
- * Zentrale Spielwelt-Klasse: hält Charakter, Level und HUD, zeichnet jeden
- * Frame und prüft laufend Kollisionen, Flaschenwürfe und Endboss-Kontakt.
+ * Central game world class: holds the character, level, and HUD, draws
+ * every frame, and continuously checks collisions, bottle throws, and
+ * endboss contact.
  */
 class World {
     character = new Character();
@@ -23,10 +24,10 @@ class World {
 
 
     /**
-     * Erstellt die Spielwelt, legt die HUD-Statusbars an und startet
-     * Zeichnen sowie die laufende Spiellogik.
-     * @param {HTMLCanvasElement} canvas - Das Canvas-Element des Spiels.
-     * @param {Keyboard} keyboard - Globales Tastatur-Statusobjekt.
+     * Creates the game world, sets up the HUD status bars, and starts
+     * drawing as well as the ongoing game logic.
+     * @param {HTMLCanvasElement} canvas - The game's canvas element.
+     * @param {Keyboard} keyboard - Global keyboard state object.
      */
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -46,8 +47,8 @@ class World {
 
 
     /**
-     * Verknüpft Charakter und Endboss mit dieser Welt, damit beide auf
-     * Keyboard, Level und Kamera zugreifen können.
+     * Links the character and endboss to this world, so both can access
+     * the keyboard, level, and camera.
      */
     setWorld(){
         this.character.world = this;
@@ -56,8 +57,8 @@ class World {
 
 
     /**
-     * Zentraler Spiel-Loop (60fps): prüft Kollisionen, Flaschenwürfe,
-     * Endboss-Kontakt und ob der Charakter gestorben ist.
+     * Central game loop (60fps): checks collisions, bottle throws,
+     * endboss contact, and whether the character has died.
      */
     run() {
         setStoppableInterval(() => {
@@ -75,8 +76,8 @@ class World {
 
 
     /**
-     * Aktiviert beim ersten Erreichen der Boss-Zone die Alarm-Animation
-     * und blendet danach die Endboss-Statusbar ein.
+     * Triggers the alert animation the first time the boss zone is
+     * reached, and then shows the endboss status bar.
      */
     checkEndbossContact() {
         if (!this.level.endboss.hadFirstContact && this.character.x > this.level.bossZoneX) {
@@ -88,8 +89,8 @@ class World {
 
 
     /**
-     * Prüft alle Kollisionen eines Frames: Münzen/Flaschen einsammeln,
-     * Gegnerkontakt (Sprung-Kill oder Schaden) und Flaschentreffer.
+     * Checks all collisions for a frame: collecting coins/bottles,
+     * enemy contact (jump-kill or damage), and bottle hits.
      */
     checkCollisions() {
         this.checkCoinPickups();
@@ -100,7 +101,7 @@ class World {
 
 
     /**
-     * Prüft, ob der Charakter eine Münze erreicht hat, und sammelt sie ein.
+     * Checks whether the character has reached a coin and collects it.
      */
     checkCoinPickups() {
         this.level.coins.forEach((coin) => {
@@ -112,8 +113,8 @@ class World {
 
 
     /**
-     * Prüft, ob der Charakter eine Flasche am Boden erreicht hat, und
-     * sammelt sie ein.
+     * Checks whether the character has reached a bottle on the ground
+     * and collects it.
      */
     checkBottlePickups() {
         this.level.bottles.forEach((bottle) => {
@@ -125,8 +126,8 @@ class World {
 
 
     /**
-     * Prüft den Kontakt zwischen Charakter und Gegnern: Sprung von oben
-     * besiegt den Gegner, seitlicher Kontakt verletzt den Charakter.
+     * Checks contact between the character and enemies: jumping on top
+     * defeats the enemy, side contact hurts the character.
      */
     checkEnemyContact() {
         this.level.enemies.forEach((enemy) => {
@@ -144,13 +145,13 @@ class World {
 
 
     /**
-     * Prüft, ob der Charakter fallend von oben auf den Gegner trifft
-     * (zählt beim Endboss nie als Sprungangriff). Nutzt für beide Seiten
-     * die offset-verkleinerten Hitbox-Kanten, damit die Schwelle bei
-     * kleinen, bodennahen Gegnern (z.B. ChickenSmall) nicht fast unmöglich
-     * eng wird.
-     * @param {MovableObject} enemy - Der mögliche Gegner.
-     * @returns {boolean} true bei einem gültigen Sprung-Kill.
+     * Checks whether the character is falling onto the enemy from above
+     * (never counts as a jump attack on the endboss). Uses the offset-
+     * shrunk hitbox edges on both sides so the threshold doesn't become
+     * nearly impossible for small, ground-hugging enemies (e.g.
+     * ChickenSmall).
+     * @param {MovableObject} enemy - The potential enemy.
+     * @returns {boolean} true for a valid jump-kill.
      */
     isJumpedOnTop(enemy) {
         let character = this.character;
@@ -164,8 +165,8 @@ class World {
 
 
     /**
-     * Prüft, ob geworfene Flaschen einen Gegner treffen, und entfernt
-     * Flaschen, deren Splash-Animation bereits abgelaufen ist.
+     * Checks whether thrown bottles hit an enemy, and removes bottles
+     * whose splash animation has already finished.
      */
     checkThrowableHits() {
         this.throwableObjects.forEach((bottle) => {
@@ -184,9 +185,9 @@ class World {
 
 
     /**
-     * Entfernt eine eingesammelte Münze aus dem Level und aktualisiert
-     * Zähler und Coin-Statusbar.
-     * @param {Coin} coin - Die eingesammelte Münze.
+     * Removes a collected coin from the level and updates the counter
+     * and coin status bar.
+     * @param {Coin} coin - The collected coin.
      */
     collectCoin(coin) {
         this.level.coins = this.level.coins.filter(c => c !== coin);
@@ -197,9 +198,9 @@ class World {
 
 
     /**
-     * Entfernt eine eingesammelte Flasche aus dem Level und erhöht den
-     * Flaschenvorrat des Charakters.
-     * @param {Bottle} bottle - Die eingesammelte Flasche.
+     * Removes a collected bottle from the level and increases the
+     * character's bottle supply.
+     * @param {Bottle} bottle - The collected bottle.
      */
     collectBottle(bottle) {
         this.level.bottles = this.level.bottles.filter(b => b !== bottle);
@@ -210,9 +211,9 @@ class World {
 
 
     /**
-     * Besiegt einen Gegner durch Sprungangriff: Gegner stirbt, Charakter
-     * erhält einen kleinen Rückprall nach oben.
-     * @param {MovableObject} enemy - Der besiegte Gegner.
+     * Defeats an enemy via a jump attack: the enemy dies, the character
+     * gets a small bounce upward.
+     * @param {MovableObject} enemy - The defeated enemy.
      */
     defeatEnemyByJump(enemy) {
         enemy.die();
@@ -225,11 +226,10 @@ class World {
 
 
     /**
-     * Verarbeitet einen Flaschentreffer: lässt die Flasche platzen und
-     * fügt dem Gegner Schaden zu (Endboss verliert Energie, normale
-     * Gegner sterben sofort).
-     * @param {ThrowableObject} bottle - Die treffende Flasche.
-     * @param {MovableObject} enemy - Der getroffene Gegner.
+     * Processes a bottle hit: makes the bottle splash and damages the
+     * enemy (the endboss loses energy, normal enemies die instantly).
+     * @param {ThrowableObject} bottle - The bottle that hit.
+     * @param {MovableObject} enemy - The enemy that was hit.
      */
     hitEnemyWithBottle(bottle, enemy) {
         bottle.splash();
@@ -250,9 +250,9 @@ class World {
 
 
     /**
-     * Erzeugt bei Tastendruck D eine neue Flasche, sofern Vorrat vorhanden
-     * ist und die letzte Flasche mindestens throwCooldown ms her ist (damit
-     * D nicht gespammt werden kann), und reduziert den Flaschenvorrat um eins.
+     * Spawns a new bottle on D key press, provided there's supply left
+     * and the last throw was at least throwCooldown ms ago (so D can't
+     * be spammed), and reduces the bottle supply by one.
      */
     checkThrowObjects() {
         let canThrow = Date.now() - this.lastThrowTime >= this.throwCooldown;
@@ -269,8 +269,8 @@ class World {
 
 
     /**
-     * Zeichnet einen kompletten Frame: Hintergrund, Spielobjekte, HUD,
-     * und plant sich selbst für den nächsten Frame erneut ein.
+     * Draws a complete frame: background, game objects, HUD, and
+     * schedules itself again for the next frame.
      */
     draw() {
         this.drawWorldObjects();
@@ -280,8 +280,8 @@ class World {
 
 
     /**
-     * Zeichnet Hintergrund, Charakter, Gegner und Sammelobjekte innerhalb
-     * der Kameraverschiebung.
+     * Draws the background, character, enemies, and collectibles within
+     * the camera offset.
      */
     drawWorldObjects() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -301,7 +301,8 @@ class World {
 
 
     /**
-     * Zeichnet die Statusbars und den HUD-Text, scrollfest über dem Spiel.
+     * Draws the status bars and the HUD text, fixed on top of the game
+     * regardless of scrolling.
      */
     drawHud() {
         this.statusBar.setPercentage(this.character.energy);
@@ -316,7 +317,7 @@ class World {
 
 
     /**
-     * Plant den nächsten Zeichen-Frame, sofern das Spiel noch läuft.
+     * Schedules the next draw frame, as long as the game is still running.
      */
     scheduleNextFrame() {
         if (this.gameEnded) {
@@ -330,8 +331,8 @@ class World {
 
 
     /**
-     * Zeichnet die Zahlenwerte (Coins, Flaschen, Endboss-Prozent) mit
-     * Kontur zentriert auf die jeweilige Statusbar.
+     * Draws the numeric values (coins, bottles, endboss percentage) with
+     * an outline, centered on the respective status bar.
      */
     drawHudText() {
         this.ctx.font = 'bold 12px Arial';
@@ -351,10 +352,10 @@ class World {
 
 
     /**
-     * Zeichnet Text mit schwarzer Kontur für bessere Lesbarkeit.
-     * @param {string} text - Anzuzeigender Text.
-     * @param {number} x - x-Position.
-     * @param {number} y - y-Position (Textgrundlinie).
+     * Draws text with a black outline for better readability.
+     * @param {string} text - Text to display.
+     * @param {number} x - x position.
+     * @param {number} y - y position (text baseline).
      */
     drawOutlinedText(text, x, y) {
         this.ctx.strokeText(text, x, y);
@@ -363,8 +364,8 @@ class World {
 
 
     /**
-     * Zeichnet eine Liste von Objekten nacheinander auf den Canvas.
-     * @param {DrawableObject[]} objects - Zu zeichnende Objekte.
+     * Draws a list of objects onto the canvas one after another.
+     * @param {DrawableObject[]} objects - Objects to draw.
      */
     addObjectsToMap(objects) {
         objects.forEach(o => {
@@ -374,9 +375,9 @@ class World {
 
 
     /**
-     * Zeichnet ein einzelnes Objekt, spiegelt es dabei horizontal, wenn
-     * es in die andere Richtung blickt (otherDirection).
-     * @param {DrawableObject} mo - Das zu zeichnende Objekt.
+     * Draws a single object, mirroring it horizontally if it's facing
+     * the other direction (otherDirection).
+     * @param {DrawableObject} mo - The object to draw.
      */
     addToMap(mo) {
         if (mo.otherDirection) {
@@ -392,9 +393,9 @@ class World {
 
 
     /**
-     * Spiegelt den Zeichenkontext horizontal, um ein Objekt seitenverkehrt
-     * darzustellen.
-     * @param {DrawableObject} mo - Das zu spiegelnde Objekt.
+     * Mirrors the drawing context horizontally to render an object
+     * flipped.
+     * @param {DrawableObject} mo - The object to mirror.
      */
     flipImage(mo){
             this.ctx.save();
@@ -405,8 +406,8 @@ class World {
 
 
     /**
-     * Macht die Spiegelung des Zeichenkontexts wieder rückgängig.
-     * @param {DrawableObject} mo - Das zuvor gespiegelte Objekt.
+     * Undoes the mirroring of the drawing context again.
+     * @param {DrawableObject} mo - The previously mirrored object.
      */
     flipImageBack(mo) {
             mo.x = mo.x * -1;

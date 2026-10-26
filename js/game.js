@@ -5,10 +5,11 @@ let intervalIds = [];
 
 
 /**
- * Wrapper um setInterval, der die Interval-ID für spätere Bereinigung merkt.
- * @param {Function} fn - Funktion, die wiederholt ausgeführt wird.
- * @param {number} time - Intervall in Millisekunden.
- * @returns {number} Die Interval-ID.
+ * Wrapper around setInterval that remembers the interval ID for later
+ * cleanup.
+ * @param {Function} fn - Function to run repeatedly.
+ * @param {number} time - Interval in milliseconds.
+ * @returns {number} The interval ID.
  */
 function setStoppableInterval(fn, time) {
     let id = setInterval(fn, time);
@@ -18,8 +19,8 @@ function setStoppableInterval(fn, time) {
 
 
 /**
- * Stoppt alle über setStoppableInterval gestarteten Intervalle, z.B. bei
- * Neustart oder Spielende, damit keine doppelten Loops entstehen.
+ * Stops all intervals started via setStoppableInterval, e.g. on restart
+ * or game end, so no duplicate loops are left running.
  */
 function stopAllIntervals() {
     intervalIds.forEach(id => clearInterval(id));
@@ -28,8 +29,8 @@ function stopAllIntervals() {
 
 
 /**
- * Initialisiert das Spiel beim Laden der Seite: holt das Canvas, zeigt den
- * Startscreen, bindet die Touch-Steuerung und prüft die Geräteausrichtung.
+ * Initializes the game when the page loads: grabs the canvas, shows the
+ * start screen, binds touch controls, and checks device orientation.
  */
 function init(){
     canvas = document.getElementById('canvas');
@@ -44,7 +45,7 @@ function init(){
 
 
 /**
- * Zeigt den Startscreen an und blendet alle anderen Screens/Overlays aus.
+ * Shows the start screen and hides all other screens/overlays.
  */
 function showStartScreen() {
     closeOptions();
@@ -58,8 +59,8 @@ function showStartScreen() {
 
 
 /**
- * Startet eine neue Spielrunde: blendet den Startscreen aus, baut Level
- * und Welt neu auf und startet die Hintergrundmusik.
+ * Starts a new round: hides the start screen, rebuilds the level and
+ * world, and starts the background music.
  */
 function startGame() {
     stopEndSound();
@@ -81,8 +82,8 @@ function startGame() {
 
 
 /**
- * Beendet die Spielrunde nach dem Tod des Charakters: stoppt alles und
- * zeigt den Game-Over-Screen.
+ * Ends the round after the character's death: stops everything and
+ * shows the game-over screen.
  */
 function gameOver() {
     if (world.gameEnded) {
@@ -101,8 +102,8 @@ function gameOver() {
 
 
 /**
- * Beendet die Spielrunde nach dem Sieg über den Endboss: stoppt alles,
- * trägt die gesammelten Münzen ein und zeigt den Gewinn-Screen.
+ * Ends the round after defeating the endboss: stops everything, fills
+ * in the collected coins, and shows the win screen.
  */
 function gameWon() {
     if (world.gameEnded) {
@@ -122,8 +123,9 @@ function gameWon() {
 
 
 /**
- * Erkennt anhand des User-Agents, ob das Spiel auf einem Mobilgerät läuft.
- * @returns {boolean} true bei einem erkannten Mobilgerät.
+ * Detects from the user agent whether the game is running on a mobile
+ * device.
+ * @returns {boolean} true if a mobile device is detected.
  */
 function isMobile() {
     const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
@@ -132,8 +134,8 @@ function isMobile() {
 
 
 /**
- * Zeigt auf Mobilgeräten im Hochformat den Drehhinweis an, auf Desktop
- * und im Querformat bleibt er ausgeblendet.
+ * Shows the rotate-device prompt on mobile devices in portrait mode;
+ * stays hidden on desktop and in landscape mode.
  */
 function checkOrientation() {
     if (!isMobile()) {
@@ -146,8 +148,8 @@ function checkOrientation() {
 
 
 /**
- * Verknüpft alle vier mobilen Steuerungs-Buttons mit den entsprechenden
- * Tastatur-Feldern.
+ * Binds all four mobile control buttons to the corresponding keyboard
+ * fields.
  */
 function bindMobileControls() {
     bindTouchButton('mobile_left', 'LEFT');
@@ -158,10 +160,10 @@ function bindMobileControls() {
 
 
 /**
- * Setzt bei Touch-Start/-Ende das passende Tastatur-Feld, damit der
- * Button wie die entsprechende Taste wirkt.
- * @param {string} buttonId - ID des Buttons im DOM.
- * @param {string} keyboardField - Feldname im Keyboard-Objekt (z.B. 'LEFT').
+ * Sets the matching keyboard field on touch start/end, so the button
+ * behaves like the corresponding key.
+ * @param {string} buttonId - ID of the button in the DOM.
+ * @param {string} keyboardField - Field name on the Keyboard object (e.g. 'LEFT').
  */
 function bindTouchButton(buttonId, keyboardField) {
     let button = document.getElementById(buttonId);
@@ -181,7 +183,7 @@ function bindTouchButton(buttonId, keyboardField) {
 
 
 /**
- * Startet eine komplett neue Spielrunde (Alias für startGame).
+ * Starts a completely new round (alias for startGame).
  */
 function restartGame() {
     startGame();
@@ -189,7 +191,7 @@ function restartGame() {
 
 
 /**
- * Beendet das laufende Spiel und kehrt zum Startscreen zurück.
+ * Ends the running game and returns to the start screen.
  */
 function backToMenu() {
     stopAllIntervals();
@@ -200,10 +202,9 @@ function backToMenu() {
 
 
 /**
- * Schließt ein Overlay, wenn außerhalb seines Inhalts (auf den Hintergrund)
- * geklickt wurde.
- * @param {MouseEvent} event - Das Klick-Event auf dem Overlay-Hintergrund.
- * @param {Function} closeFn - Funktion, die das Overlay schließt.
+ * Closes an overlay when clicking outside its content (on the backdrop).
+ * @param {MouseEvent} event - The click event on the overlay backdrop.
+ * @param {Function} closeFn - Function that closes the overlay.
  */
 function closeOverlayOnBackdropClick(event, closeFn) {
     if (event.target === event.currentTarget) {
@@ -213,7 +214,7 @@ function closeOverlayOnBackdropClick(event, closeFn) {
 
 
 /**
- * Zeigt das Einstellungen-Menü an.
+ * Shows the options menu.
  */
 function openOptions() {
     document.getElementById('options_screen').classList.remove('d_none');
@@ -221,7 +222,7 @@ function openOptions() {
 
 
 /**
- * Blendet das Einstellungen-Menü aus.
+ * Hides the options menu.
  */
 function closeOptions() {
     document.getElementById('options_screen').classList.add('d_none');
@@ -229,7 +230,7 @@ function closeOptions() {
 
 
 /**
- * Blendet das Einstellungen-Menü aus und zeigt das Impressum an.
+ * Hides the options menu and shows the legal notice (Impressum).
  */
 function openImpressum() {
     closeOptions();
@@ -238,7 +239,7 @@ function openImpressum() {
 
 
 /**
- * Blendet das Impressum aus.
+ * Hides the legal notice (Impressum).
  */
 function closeImpressum() {
     document.getElementById('impressum_screen').classList.add('d_none');
@@ -246,7 +247,7 @@ function closeImpressum() {
 
 
 /**
- * Schließt das Impressum und kehrt zum Einstellungen-Menü zurück.
+ * Closes the legal notice and returns to the options menu.
  */
 function closeImpressumToOptions() {
     closeImpressum();
@@ -255,10 +256,10 @@ function closeImpressumToOptions() {
 
 
 /**
- * Wechselt zwischen Vollbild- und normalem Modus für den Spielcontainer.
- * Fehlt die Fullscreen API (iOS Safari/Chrome), zeigt der Button
- * stattdessen einen Hinweis - echtes Vollbild geht dort nur über
- * "Zum Home-Bildschirm hinzufügen" (siehe PWA-Manifest).
+ * Toggles the game container between fullscreen and normal mode.
+ * If the Fullscreen API is unavailable (iOS Safari/Chrome), the button
+ * shows a hint instead - real fullscreen there only works via
+ * "Add to Home Screen" (see the PWA manifest).
  */
 function toggleFullscreen() {
     if (document.fullscreenElement) {
@@ -275,7 +276,7 @@ function toggleFullscreen() {
 
 
 /**
- * Aktualisiert Icon aller Vollbild-Buttons passend zum aktuellen Zustand.
+ * Updates the icon of all fullscreen buttons to match the current state.
  */
 function updateFullscreenButtons() {
     document.querySelectorAll('.fullscreen_button').forEach(btn => {
@@ -287,10 +288,10 @@ function updateFullscreenButtons() {
 
 
 /**
- * Passt die Vollbild-Buttons an, falls die Fullscreen API fehlt: Läuft das
- * Spiel bereits als installierte PWA (echtes Vollbild aktiv), verschwinden
- * die Buttons. Im normalen Browser-Tab zeigen sie stattdessen ein
- * "Zum Home-Bildschirm"-Icon, das beim Antippen den Hinweis erklärt.
+ * Adjusts the fullscreen buttons when the Fullscreen API is unavailable:
+ * if the game is already running as an installed PWA (real fullscreen
+ * active), the buttons disappear. In a regular browser tab they show an
+ * "Add to Home Screen" icon instead, which explains the hint on tap.
  */
 function setupFullscreenButtons() {
     if (document.fullscreenEnabled) {
@@ -312,8 +313,8 @@ function setupFullscreenButtons() {
 
 
 /**
- * Setzt bei Tastendruck das passende Keyboard-Feld. M schaltet zusätzlich
- * direkt den Sound stumm/laut (nur bei erstem Drücken, nicht bei Wiederholung).
+ * Sets the matching keyboard field on key press. M additionally toggles
+ * sound mute directly (only on the first press, not on key repeat).
  */
 window.addEventListener("keydown", (event) => {
     if (event.keyCode == 39) {
@@ -342,7 +343,7 @@ window.addEventListener("keydown", (event) => {
 
 
 /**
- * Setzt beim Loslassen einer Taste das passende Keyboard-Feld zurück.
+ * Resets the matching keyboard field when a key is released.
  */
 window.addEventListener("keyup", (event) => {
     if (event.keyCode == 39) {

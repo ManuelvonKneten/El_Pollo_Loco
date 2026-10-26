@@ -1,6 +1,6 @@
 /**
- * Basisklasse für alle zeichenbaren Objekte im Spiel.
- * Kümmert sich um das Laden von Bildern und das Zeichnen auf dem Canvas.
+ * Base class for all drawable objects in the game.
+ * Handles loading images and drawing them onto the canvas.
  */
 class DrawableObject {
     x = 120;
@@ -13,8 +13,8 @@ class DrawableObject {
 
 
     /**
-     * Lädt ein einzelnes Bild und setzt es als aktuelles Bild.
-     * @param {string} path - Pfad zur Bilddatei.
+     * Loads a single image and sets it as the current image.
+     * @param {string} path - Path to the image file.
      */
     loadImage(path) {
         this.img = new Image();
@@ -23,8 +23,8 @@ class DrawableObject {
 
 
     /**
-     * Zeichnet das aktuelle Bild an Position x/y auf den Canvas.
-     * @param {CanvasRenderingContext2D} ctx - Der Zeichenkontext des Canvas.
+     * Draws the current image at position x/y onto the canvas.
+     * @param {CanvasRenderingContext2D} ctx - The canvas's drawing context.
      */
     draw(ctx) {
         ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
@@ -32,15 +32,15 @@ class DrawableObject {
 
 
     /**
-     * Zeichnet optional einen Debug-Rahmen um das Objekt (aktuell deaktiviert).
+     * Optionally draws a debug frame around the object (currently disabled).
      */
     drawFrame() {
     }
 
 
     /**
-     * Lädt mehrere Bilder vorab in den Image-Cache für Animationen.
-     * @param {string[]} arr - Liste der Bildpfade.
+     * Preloads multiple images into the image cache for animations.
+     * @param {string[]} arr - List of image paths.
      */
     loadImages(arr) {
         arr.forEach((path) => {
@@ -52,8 +52,8 @@ class DrawableObject {
 
 
     /**
-     * Spielt eine Animation ab, indem bei jedem Aufruf das nächste Bild gesetzt wird.
-     * @param {string[]} images - Liste der Bildpfade für die Animation.
+     * Plays an animation by advancing to the next image on each call.
+     * @param {string[]} images - List of image paths for the animation.
      */
     playAnimation(images) {
         let i = this.currentImage % images.length;

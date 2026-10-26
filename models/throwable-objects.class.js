@@ -1,6 +1,6 @@
 /**
- * Geworfene Flasche. Fliegt in einer Wurfkurve, rotiert in der Luft und
- * zeigt beim Aufprall (Boden oder Gegner) eine Splash-Animation.
+ * Thrown bottle. Flies in an arc, rotates in the air, and shows a splash
+ * animation on impact (ground or enemy).
  */
 class ThrowableObject extends MovableObject {
     IMAGES_ROTATION = [
@@ -28,10 +28,10 @@ class ThrowableObject extends MovableObject {
 
 
     /**
-     * Erstellt eine geworfene Flasche und startet sofort die Flugbahn.
-     * @param {number} x - Start-x-Position (meist Charakterposition).
-     * @param {number} y - Start-y-Position.
-     * @param {boolean} otherDirection - true, wenn nach links geworfen wird.
+     * Creates a thrown bottle and immediately starts its flight path.
+     * @param {number} x - Start x position (usually the character's position).
+     * @param {number} y - Start y position.
+     * @param {boolean} otherDirection - true if thrown to the left.
      */
     constructor(x, y, otherDirection) {
         super();
@@ -46,8 +46,8 @@ class ThrowableObject extends MovableObject {
 
 
     /**
-     * Startet die Wurfbewegung (Flugkurve mit Schwerkraft) und die
-     * Rotationsanimation der Flasche.
+     * Starts the throwing motion (flight arc with gravity) and the
+     * bottle's rotation animation.
      */
     throw() {
         this.speedY = 30;
@@ -58,8 +58,8 @@ class ThrowableObject extends MovableObject {
 
 
     /**
-     * Lässt die Flasche fliegen (Schwerkraft + horizontale Bewegung) und
-     * löst beim Bodenkontakt den Splash aus.
+     * Makes the bottle fly (gravity + horizontal movement) and triggers
+     * the splash on ground contact.
      */
     startFlight() {
         this.flightInterval = setStoppableInterval(() => {
@@ -78,7 +78,7 @@ class ThrowableObject extends MovableObject {
 
 
     /**
-     * Spielt die Rotationsanimation der fliegenden Flasche ab.
+     * Plays the rotation animation of the flying bottle.
      */
     startRotation() {
         this.rotationInterval = setStoppableInterval(() => {
@@ -90,8 +90,8 @@ class ThrowableObject extends MovableObject {
 
 
     /**
-     * Stoppt Flug und Rotation, markiert die Flasche als getroffen und
-     * spielt die Splash-Animation ab.
+     * Stops flight and rotation, marks the bottle as hit, and plays the
+     * splash animation.
      */
     splash() {
         if (this.hasHit) {
@@ -107,8 +107,8 @@ class ThrowableObject extends MovableObject {
 
 
     /**
-     * Spielt die Splash-Bildfolge einmal komplett ab und stoppt danach
-     * das Interval.
+     * Plays the splash image sequence once in full and then stops the
+     * interval.
      */
     startSplashAnimation() {
         let splashInterval = setStoppableInterval(() => {

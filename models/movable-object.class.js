@@ -1,6 +1,6 @@
 /**
- * Basisklasse für alle beweglichen Objekte (Charakter, Gegner, Flaschen etc.).
- * Enthält Schwerkraft, Bewegung, Kollisionserkennung und Treffer-Logik.
+ * Base class for all movable objects (character, enemies, bottles, etc.).
+ * Handles gravity, movement, collision detection, and hit logic.
  */
 class MovableObject extends DrawableObject {
     speed = 0.15;
@@ -14,8 +14,8 @@ class MovableObject extends DrawableObject {
 
 
     /**
-     * Lässt das Objekt kontinuierlich fallen, solange es sich über dem Boden befindet
-     * oder noch nach oben fliegt (z.B. nach einem Sprung).
+     * Makes the object continuously fall as long as it's above the
+     * ground or still rising (e.g. after a jump).
      */
     applyGravity() {
         setStoppableInterval(() => {
@@ -30,8 +30,8 @@ class MovableObject extends DrawableObject {
 
 
     /**
-     * Prüft, ob sich das Objekt über dem Boden befindet (z.B. während eines Sprungs).
-     * @returns {boolean} true, wenn das Objekt in der Luft ist.
+     * Checks whether the object is above the ground (e.g. during a jump).
+     * @returns {boolean} true if the object is in the air.
      */
     isAboveGround(){
        return this.y < 110;
@@ -39,11 +39,11 @@ class MovableObject extends DrawableObject {
 
 
         /**
-         * Prüft, ob dieses Objekt mit einem anderen Objekt kollidiert. Die Hitboxen
-         * werden dabei um die jeweiligen offsets verkleinert, damit transparente
-         * Ränder der Sprites nicht als Treffer zählen.
-         * @param {DrawableObject} mo - Das andere Objekt.
-         * @returns {boolean} true, wenn sich die verkleinerten Hitboxen überschneiden.
+         * Checks whether this object collides with another object. The
+         * hitboxes are shrunk by their respective offsets so that
+         * transparent sprite margins don't count as a hit.
+         * @param {DrawableObject} mo - The other object.
+         * @returns {boolean} true if the shrunk hitboxes overlap.
          */
         isColling(mo) {
         return this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
@@ -54,8 +54,8 @@ class MovableObject extends DrawableObject {
 
 
     /**
-     * Zieht dem Objekt Energie ab und merkt sich den Zeitpunkt des Treffers.
-     * @param {number} [damage=5] - Höhe des Schadens.
+     * Deducts energy from the object and remembers the time of the hit.
+     * @param {number} [damage=5] - Amount of damage.
      */
     hit(damage = 5) {
         this.energy -= damage;
@@ -67,8 +67,8 @@ class MovableObject extends DrawableObject {
 
 
     /**
-     * Prüft, ob das Objekt keine Energie mehr hat.
-     * @returns {boolean} true, wenn die Energie 0 ist.
+     * Checks whether the object has no energy left.
+     * @returns {boolean} true if energy is 0.
      */
     isDead() {
         return this.energy <= 0;
@@ -76,8 +76,9 @@ class MovableObject extends DrawableObject {
 
 
     /**
-     * Prüft, ob das Objekt gerade in der kurzen Unverwundbarkeitsphase nach einem Treffer ist.
-     * @returns {boolean} true, wenn der letzte Treffer weniger als 2 Sekunden her ist.
+     * Checks whether the object is currently in the brief invulnerability
+     * window after being hit.
+     * @returns {boolean} true if the last hit was less than 2 seconds ago.
      */
     isHurt() {
         let timePassed = (new Date().getTime() - this.lastHit) / 1000;
@@ -86,7 +87,7 @@ class MovableObject extends DrawableObject {
 
 
     /**
-     * Bewegt das Objekt um seine Geschwindigkeit nach rechts.
+     * Moves the object to the right by its speed.
      */
     moveRight() {
         this.x += this.speed;
@@ -94,7 +95,7 @@ class MovableObject extends DrawableObject {
 
 
     /**
-     * Bewegt das Objekt um seine Geschwindigkeit nach links.
+     * Moves the object to the left by its speed.
      */
     moveLeft() {
         this.x -= this.speed;
@@ -102,7 +103,7 @@ class MovableObject extends DrawableObject {
 
 
     /**
-     * Startet einen Sprung, indem die vertikale Geschwindigkeit gesetzt wird.
+     * Starts a jump by setting the vertical speed.
      */
     jump(){
         this.speedY = 25;

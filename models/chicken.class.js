@@ -1,6 +1,6 @@
 /**
- * Normaler Gegner, der sich selbstständig nach links bewegt und durch
- * Sprung-Angriff oder Flaschenwurf besiegt werden kann.
+ * Normal enemy that moves left on its own and can be defeated by a
+ * jump attack or a thrown bottle.
  */
 class Chicken extends MovableObject {
         y = 355;
@@ -18,8 +18,8 @@ class Chicken extends MovableObject {
 
 
     /**
-     * Erstellt ein Huhn an einer zufälligen Position mit zufälliger
-     * Geschwindigkeit und startet die Laufanimation.
+     * Creates a chicken at a random position with a random speed and
+     * starts the walking animation.
      */
     constructor(){
         super();
@@ -34,8 +34,8 @@ class Chicken extends MovableObject {
 
 
     /**
-     * Bewegt das Huhn kontinuierlich nach links und spielt die
-     * Laufanimation ab, solange es nicht besiegt wurde.
+     * Continuously moves the chicken to the left and plays the walking
+     * animation as long as it hasn't been defeated.
      */
     animate(){
         setStoppableInterval(() => {
@@ -53,8 +53,8 @@ class Chicken extends MovableObject {
 
 
     /**
-     * Markiert das Huhn als besiegt, stoppt die Bewegung und zeigt das
-     * Tod-Bild an.
+     * Marks the chicken as defeated, stops its movement and shows the
+     * dead image.
      */
     die() {
         this.dead = true;

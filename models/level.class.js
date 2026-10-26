@@ -1,6 +1,6 @@
 /**
- * Enthält alle Objekte eines Levels (Gegner, Wolken, Hintergrund,
- * Münzen, Flaschen) sowie levelbezogene Konstanten.
+ * Holds all objects of a level (enemies, clouds, background,
+ * coins, bottles) as well as level-related constants.
  */
 class Level {
     enemies;
@@ -16,13 +16,13 @@ class Level {
 
 
     /**
-     * Erstellt ein Level aus den übergebenen Objektlisten und ermittelt
-     * den Endboss automatisch aus der Gegnerliste.
-     * @param {MovableObject[]} enemies - Alle Gegner inkl. Endboss.
-     * @param {Cloud[]} clouds - Wolken im Hintergrund.
-     * @param {BackgroundObject[]} backgroundObjects - Hintergrund-Layer.
-     * @param {Coin[]} coins - Sammelbare Münzen.
-     * @param {Bottle[]} bottles - Sammelbare Flaschen am Boden.
+     * Creates a level from the given object lists and automatically
+     * determines the endboss from the enemy list.
+     * @param {MovableObject[]} enemies - All enemies including the endboss.
+     * @param {Cloud[]} clouds - Clouds in the background.
+     * @param {BackgroundObject[]} backgroundObjects - Background layers.
+     * @param {Coin[]} coins - Collectible coins.
+     * @param {Bottle[]} bottles - Collectible bottles on the ground.
      */
     constructor(enemies, clouds, backgroundObjects, coins, bottles){
 

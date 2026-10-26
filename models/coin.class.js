@@ -1,5 +1,5 @@
 /**
- * Sammelbare Münze, die durch zwei abwechselnde Bilder animiert wird.
+ * Collectible coin, animated by alternating between two images.
  */
 class Coin extends MovableObject {
     IMAGES = [
@@ -13,9 +13,9 @@ class Coin extends MovableObject {
 
 
     /**
-     * Erstellt eine Münze an der angegebenen Position.
-     * @param {number} x - x-Position der Münze.
-     * @param {number} y - y-Position der Münze.
+     * Creates a coin at the given position.
+     * @param {number} x - x position of the coin.
+     * @param {number} y - y position of the coin.
      */
     constructor(x, y) {
         super();
@@ -28,7 +28,7 @@ class Coin extends MovableObject {
 
 
     /**
-     * Spielt die Münz-Animation dauerhaft ab.
+     * Plays the coin's animation continuously.
      */
     animate() {
         setStoppableInterval(() => {

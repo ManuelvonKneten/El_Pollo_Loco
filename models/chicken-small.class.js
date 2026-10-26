@@ -1,5 +1,5 @@
 /**
- * Kleinere, schnellere Variante des normalen Huhns.
+ * Smaller, faster variant of the normal chicken.
  */
 class ChickenSmall extends MovableObject {
         y = 390;
@@ -17,8 +17,8 @@ class ChickenSmall extends MovableObject {
 
 
     /**
-     * Erstellt ein kleines Huhn an einer zufälligen Position mit höherer
-     * Geschwindigkeit als das normale Huhn.
+     * Creates a small chicken at a random position with a higher speed
+     * than the normal chicken.
      */
     constructor(){
         super();
@@ -33,8 +33,8 @@ class ChickenSmall extends MovableObject {
 
 
     /**
-     * Bewegt das Huhn kontinuierlich nach links und spielt die
-     * Laufanimation ab, solange es nicht besiegt wurde.
+     * Continuously moves the chicken to the left and plays the walking
+     * animation as long as it hasn't been defeated.
      */
     animate(){
         setStoppableInterval(() => {
@@ -52,8 +52,8 @@ class ChickenSmall extends MovableObject {
 
 
     /**
-     * Markiert das Huhn als besiegt, stoppt die Bewegung und zeigt das
-     * Tod-Bild an.
+     * Marks the chicken as defeated, stops its movement and shows the
+     * dead image.
      */
     die() {
         this.dead = true;

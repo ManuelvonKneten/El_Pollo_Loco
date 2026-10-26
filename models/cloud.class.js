@@ -1,5 +1,5 @@
 /**
- * Wolke im Hintergrund, bewegt sich langsam nach links (Parallax-Effekt).
+ * Cloud in the background, moves slowly to the left (parallax effect).
  */
 class Cloud extends MovableObject {
 
@@ -9,8 +9,8 @@ class Cloud extends MovableObject {
 
 
     /**
-     * Erstellt eine Wolke nahe der übergebenen x-Position.
-     * @param {number} x - Basis-x-Position der Wolke.
+     * Creates a cloud near the given x position.
+     * @param {number} x - Base x position of the cloud.
      */
     constructor(x){
         super().loadImage('img/5_background/layers/4_clouds/1.png');
@@ -23,7 +23,7 @@ class Cloud extends MovableObject {
 
 
     /**
-     * Startet die Bewegung der Wolke nach links.
+     * Starts the cloud's leftward movement.
      */
     animate() {
 
@@ -33,7 +33,7 @@ class Cloud extends MovableObject {
 
 
     /**
-     * Bewegt die Wolke dauerhaft mit konstanter Geschwindigkeit nach links.
+     * Continuously moves the cloud to the left at a constant speed.
      */
     moveLeft(){
         setStoppableInterval ( ()  => {

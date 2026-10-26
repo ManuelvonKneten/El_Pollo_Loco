@@ -1,6 +1,6 @@
 /**
- * Endgegner des Levels. Patrouilliert zunächst, greift nach dem ersten
- * Spielerkontakt an und wird über Flaschentreffer besiegt.
+ * Level's end boss. Patrols at first, attacks after the first contact
+ * with the player, and is defeated by being hit with bottles.
  */
 class Endboss extends MovableObject {
     height = 400;
@@ -77,7 +77,8 @@ class Endboss extends MovableObject {
 
 
     /**
-     * Erstellt den Endboss am Ende des Levels und lädt alle Animationsbilder.
+     * Creates the endboss at the end of the level and loads all
+     * animation images.
      */
     constructor(){
         super();
@@ -95,7 +96,7 @@ class Endboss extends MovableObject {
 
 
     /**
-     * Lässt den Endboss sanft auf und ab schweben, solange er nicht tot ist.
+     * Makes the endboss gently bob up and down, as long as it isn't dead.
      */
     fly() {
         setStoppableInterval(() => {
@@ -109,8 +110,8 @@ class Endboss extends MovableObject {
 
 
     /**
-     * Steuert den Animationszustand des Endbosses: Tod, Patrouille, Alarm,
-     * Verletzung, Angriff oder Laufen – je nach aktuellem Zustand.
+     * Drives the endboss's animation state: dead, patrol, alert, hurt,
+     * attack, or walking - depending on the current state.
      */
     animate(){
         setStoppableInterval(() => {
@@ -120,8 +121,8 @@ class Endboss extends MovableObject {
 
 
     /**
-     * Wählt je nach Zustand die passende Animation: zuerst Tod/Patrouille/
-     * Alarm, danach Verletzung, zuletzt Angriff oder Laufen.
+     * Picks the matching animation depending on the state: dead/patrol/
+     * alert first, then hurt, then attack or walking.
      */
     updateAnimationState() {
         if (this.handleSpecialStates()) {
@@ -136,8 +137,8 @@ class Endboss extends MovableObject {
 
 
     /**
-     * Behandelt Tod, Patrouille, Wutangriff und Alarm-Phase.
-     * @returns {boolean} true, wenn einer dieser Zustände aktiv war.
+     * Handles death, patrol, rage attack, and the alert phase.
+     * @returns {boolean} true if one of these states was active.
      */
     handleSpecialStates() {
         if (this.isDead()) {
@@ -162,8 +163,8 @@ class Endboss extends MovableObject {
 
 
     /**
-     * Löst direkt nach der Alarm-Phase beim allerersten Zusammentreffen
-     * einmalig denselben Sprung-Sturz-Angriff aus wie checkRageAttack.
+     * Triggers the same jump-and-dive attack as checkRageAttack once,
+     * right after the alert phase on the very first encounter.
      */
     checkFirstContactAttack() {
         if (!this.firstContactAttackTriggered && !this.rageState) {
@@ -174,9 +175,9 @@ class Endboss extends MovableObject {
 
 
     /**
-     * Löst einmalig einen besonders harten Frontalangriff aus, sobald die
-     * Energie des Endbosses auf rageHealthThreshold% oder darunter fällt:
-     * hoher Sprung, dann ein sehr schneller Sturz auf die Spielerposition.
+     * Triggers a particularly hard frontal attack once the endboss's
+     * energy drops to rageHealthThreshold% or below: a high jump, then a
+     * very fast dive onto the player's position.
      */
     checkRageAttack() {
         if (!this.rageTriggered && !this.rageState && this.energy > 0 && this.energy <= this.rageHealthThreshold) {
@@ -187,8 +188,8 @@ class Endboss extends MovableObject {
 
 
     /**
-     * Startet den Wutangriff: eigenes, schnelles Update-Intervall unabhängig
-     * vom normalen 200ms-Animationstakt, damit Sprung und Sturz flüssig wirken.
+     * Starts the rage attack: its own fast update interval independent
+     * of the normal 200ms animation tick, so the jump and dive feel smooth.
      */
     startRageAttack() {
         this.rageState = 'rising';
@@ -199,10 +200,10 @@ class Endboss extends MovableObject {
 
 
     /**
-     * Bewegt den Endboss durch die beiden Phasen des Wutangriffs: erst
-     * hoch springen, am Scheitelpunkt die Spielerposition anvisieren, dann
-     * sehr schnell auf diese Position herabstürzen.
-     * @param {number} rageInterval - ID des Update-Intervalls (zum Stoppen beim Landen).
+     * Moves the endboss through the two phases of the rage attack: first
+     * jump high, target the player's position at the peak, then dive
+     * down onto that position very fast.
+     * @param {number} rageInterval - ID of the update interval (to stop it on landing).
      */
     updateRageAttack(rageInterval) {
         this.playAnimation(this.IMAGES_ATTACK);
@@ -225,9 +226,9 @@ class Endboss extends MovableObject {
 
 
     /**
-     * Beendet den Wutangriff und teilt bei Treffernähe einen schweren
-     * Extra-Schaden aus, unabhängig vom normalen Kontaktschaden.
-     * @param {number} rageInterval - ID des zu stoppenden Update-Intervalls.
+     * Ends the rage attack and, if close enough to the player, deals a
+     * heavy extra hit independent of the normal contact damage.
+     * @param {number} rageInterval - ID of the update interval to stop.
      */
     landRageAttack(rageInterval) {
         clearInterval(rageInterval);
@@ -243,9 +244,9 @@ class Endboss extends MovableObject {
 
 
     /**
-     * Greift an, wenn der Charakter nah genug ist (schneller Angriffssprint
-     * auf den Spieler zu), sonst läuft der Endboss normal Richtung Spieler.
-     * Dreht sich dabei immer zur tatsächlichen Position des Spielers.
+     * Attacks when the player is close enough (a fast attack sprint
+     * towards the player), otherwise the endboss walks normally towards
+     * the player. Always turns to face the player's actual position.
      */
     walkOrAttack() {
         this.faceCharacter();
@@ -260,7 +261,7 @@ class Endboss extends MovableObject {
 
 
     /**
-     * Dreht den Endboss so, dass er zur aktuellen Position des Spielers blickt.
+     * Turns the endboss to face the player's current position.
      */
     faceCharacter() {
         if (this.world) {
@@ -270,8 +271,8 @@ class Endboss extends MovableObject {
 
 
     /**
-     * Stürmt im Angriffsmodus deutlich schneller auf den Spieler zu, bleibt
-     * dabei aber immer auf seiner Seite stehen.
+     * Rushes significantly faster towards the player while attacking,
+     * but always stays on its own side of the player.
      */
     lungeTowardCharacter() {
         let character = this.world.character;
@@ -281,8 +282,8 @@ class Endboss extends MovableObject {
 
 
     /**
-     * Lässt den Endboss zwischen zwei festen x-Positionen hin- und
-     * herlaufen, solange noch kein Kontakt zum Spieler stattgefunden hat.
+     * Makes the endboss walk back and forth between two fixed x
+     * positions, as long as it hasn't made contact with the player yet.
      */
     patrol() {
         if (this.x <= this.patrolLeftX) {
@@ -302,8 +303,8 @@ class Endboss extends MovableObject {
 
 
     /**
-     * Prüft, ob der Charakter nah genug ist, damit der Endboss angreift.
-     * @returns {boolean} true, wenn der Abstand zum Charakter unter attackRange liegt.
+     * Checks whether the player is close enough for the endboss to attack.
+     * @returns {boolean} true if the distance to the player is less than attackRange.
      */
     isAttacking() {
         return this.world && Math.abs(this.x - this.world.character.x) < this.attackRange;
@@ -311,8 +312,8 @@ class Endboss extends MovableObject {
 
 
     /**
-     * Spielt die Todesanimation ab und löst beim ersten Aufruf Sound und
-     * den verzögerten Gewinn-Screen aus.
+     * Plays the death animation and, on the first call, triggers the
+     * sound and the delayed win screen.
      */
     playDeadAnimation() {
         this.playAnimation(this.IMAGES_DEAD);

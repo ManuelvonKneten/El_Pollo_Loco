@@ -1,6 +1,6 @@
 /**
- * Flasche am Boden, die eingesammelt werden kann, um den Flaschenvorrat
- * zum Werfen zu erhöhen.
+ * Bottle lying on the ground that can be collected to increase the
+ * throwable bottle supply.
  */
 class Bottle extends MovableObject {
     IMAGES_GROUND = [
@@ -15,9 +15,9 @@ class Bottle extends MovableObject {
 
 
     /**
-     * Erstellt eine liegende Flasche mit zufälliger Grafik an der
-     * angegebenen x-Position.
-     * @param {number} x - x-Position der Flasche.
+     * Creates a bottle lying on the ground with a random graphic at the
+     * given x position.
+     * @param {number} x - x position of the bottle.
      */
     constructor(x) {
         super();

@@ -1,7 +1,7 @@
-/** Mute-Zustand, wird aus localStorage wiederhergestellt, damit er Reloads übersteht. */
+/** Mute state, restored from localStorage so it survives reloads. */
 let soundsMuted = localStorage.getItem('soundsMuted') === 'true';
 
-/** Zuordnung von Sound-Namen zu den jeweiligen Audiodateien. */
+/** Maps sound names to their respective audio files. */
 const SOUND_FILES = {
     jump: 'audio/jump.mp3',
     coin: 'audio/pick_coin.mp3',
@@ -20,14 +20,14 @@ let backgroundMusic = new Audio('audio/background_music.mp3');
 backgroundMusic.loop = true;
 backgroundMusic.volume = 0.3;
 
-/** Game-Over/Sieg-Sounds laufen länger und müssen bei einem Neustart gezielt gestoppt werden können. */
+/** Game-over/win sounds run longer and must be stoppable on a restart. */
 const END_SOUND_NAMES = ['gameOver', 'win'];
 let currentEndSound = null;
 
 
 /**
- * Spielt einen einmaligen Soundeffekt ab, sofern der Sound nicht stummgeschaltet ist.
- * @param {string} name - Schlüssel aus SOUND_FILES.
+ * Plays a one-shot sound effect, unless sound is muted.
+ * @param {string} name - Key from SOUND_FILES.
  */
 function playSound(name) {
     if (soundsMuted) {
@@ -43,8 +43,8 @@ function playSound(name) {
 
 
 /**
- * Stoppt einen noch laufenden Game-Over-/Sieg-Sound, damit er nicht in
- * eine neu gestartete Spielrunde hineinspielt.
+ * Stops a still-playing game-over/win sound so it doesn't bleed into
+ * a newly started round.
  */
 function stopEndSound() {
     if (currentEndSound) {
@@ -56,7 +56,7 @@ function stopEndSound() {
 
 
 /**
- * Startet die Hintergrundmusik (Endlosschleife), sofern nicht stummgeschaltet.
+ * Starts the background music (looping), unless sound is muted.
  */
 function playMusic() {
     if (soundsMuted) {
@@ -67,7 +67,7 @@ function playMusic() {
 
 
 /**
- * Stoppt die Hintergrundmusik und setzt sie auf den Anfang zurück.
+ * Stops the background music and resets it to the beginning.
  */
 function stopMusic() {
     backgroundMusic.pause();
@@ -76,8 +76,8 @@ function stopMusic() {
 
 
 /**
- * Schaltet Musik/Sound stumm bzw. wieder an, speichert den Zustand in
- * localStorage und aktualisiert alle Mute-Buttons.
+ * Toggles sound/music mute on or off, saves the state in localStorage,
+ * and updates all mute buttons.
  */
 function toggleMute() {
     soundsMuted = !soundsMuted;
@@ -92,8 +92,8 @@ function toggleMute() {
 
 
 /**
- * Aktualisiert Icon bzw. Text aller Mute-Buttons passend zum aktuellen
- * Mute-Zustand.
+ * Updates the icon/text of all mute buttons to match the current mute
+ * state.
  */
 function updateMuteButtons() {
     document.querySelectorAll('.mute_button').forEach(btn => {

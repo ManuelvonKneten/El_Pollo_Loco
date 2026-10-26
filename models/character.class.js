@@ -1,6 +1,6 @@
 /**
- * Die Spielfigur Pepe. Steuert Bewegung, Sprung, Animationen und die
- * Kollisionsbox fürs Einsammeln von Coins und Flaschen.
+ * The player character Pepe. Handles movement, jumping, animations, and
+ * the hitbox for collecting coins and bottles.
  */
 class Character extends MovableObject {
 
@@ -77,8 +77,8 @@ class Character extends MovableObject {
 
 
     /**
-     * Erstellt den Charakter, lädt alle Animationsbilder und startet
-     * Schwerkraft sowie die laufende Animation/Steuerung.
+     * Creates the character, loads all animation images, and starts
+     * gravity as well as the ongoing animation/input handling.
      */
     constructor(){
         super();
@@ -99,9 +99,9 @@ class Character extends MovableObject {
 
 
     /**
-     * Startet zwei Intervalle: eines für Bewegung/Tastatursteuerung (60fps)
-     * und eines für den Wechsel der Sprites je nach Zustand (Tod, Sprung,
-     * Laufen, Idle, Schlafen).
+     * Starts two intervals: one for movement/keyboard input (60fps) and
+     * one for switching sprites depending on state (dead, jump, walk,
+     * idle, sleep).
      */
     animate(){
         this.animateMovement();
@@ -110,8 +110,8 @@ class Character extends MovableObject {
 
 
     /**
-     * Prüft bei jedem Tick Tod/Verletzung, verarbeitet die Tastatureingabe
-     * und aktualisiert die Kameraposition.
+     * Checks for death/hurt on every tick, processes keyboard input, and
+     * updates the camera position.
      */
     animateMovement() {
         setStoppableInterval(() => {
@@ -129,7 +129,7 @@ class Character extends MovableObject {
 
 
     /**
-     * Verarbeitet Lauf-, Sprung- und Wurftasten.
+     * Processes the walk, jump, and throw keys.
      */
     handleMovementInput() {
         this.handleHorizontalMovement();
@@ -138,7 +138,8 @@ class Character extends MovableObject {
 
 
     /**
-     * Bewegt den Charakter nach links/rechts, sofern innerhalb der Levelgrenzen.
+     * Moves the character left/right, as long as it stays within the
+     * level bounds.
      */
     handleHorizontalMovement() {
         if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x && this.x < this.world.level.endboss.x) {
@@ -155,8 +156,8 @@ class Character extends MovableObject {
 
 
     /**
-     * Startet einen Sprung und merkt sich Flaschenwürfe als Aktivität
-     * (für die Idle-/Sleep-Erkennung).
+     * Starts a jump and records bottle throws as activity (for
+     * idle/sleep detection).
      */
     handleJumpInput() {
         if ((this.world.keyboard.UP || this.world.keyboard.SPACE) && this.speedY === 0 && !this.isAboveGround()) {
@@ -171,7 +172,7 @@ class Character extends MovableObject {
 
 
     /**
-     * Wechselt die Sprites je nach Zustand: Sprung, Laufen, Idle oder Schlafen.
+     * Switches sprites depending on state: jump, walk, idle, or sleep.
      */
     animateSprite() {
         setStoppableInterval(() => {
@@ -188,8 +189,8 @@ class Character extends MovableObject {
 
 
     /**
-     * Zeigt Lauf-, Idle- oder Sleep-Animation, je nachdem ob der Charakter
-     * sich bewegt und wie lange die letzte Eingabe her ist.
+     * Shows the walk, idle, or sleep animation, depending on whether the
+     * character is moving and how long ago the last input was.
      */
     playIdleOrWalkAnimation() {
         if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {

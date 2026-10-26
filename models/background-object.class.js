@@ -1,6 +1,6 @@
 /**
- * Ein einzelnes Hintergrund-Layer-Bild (z.B. Himmel, Berge, Boden),
- * das am unteren Canvas-Rand ausgerichtet wird.
+ * A single background layer image (e.g. sky, mountains, ground),
+ * aligned to the bottom edge of the canvas.
  */
 class BackgroundObject extends MovableObject {
 
@@ -9,10 +9,10 @@ class BackgroundObject extends MovableObject {
 
 
     /**
-     * Erstellt ein Hintergrundbild an der angegebenen x-Position.
-     * @param {string} imagePath - Pfad zum Hintergrundbild.
-     * @param {number} x - x-Position des Layers.
-     * @param {number} [y] - Ungenutzter Parameter (Kompatibilität mit Aufrufstelle).
+     * Creates a background image at the given x position.
+     * @param {string} imagePath - Path to the background image.
+     * @param {number} x - x position of the layer.
+     * @param {number} [y] - Unused parameter (kept for call-site compatibility).
      */
     constructor(imagePath, x, y){
         super().loadImage(imagePath);

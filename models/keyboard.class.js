@@ -1,6 +1,6 @@
 /**
- * Hält den aktuellen Zustand aller relevanten Tasten (gedrückt/nicht
- * gedrückt). Wird von game.js befüllt und von World/Character ausgelesen.
+ * Holds the current state of all relevant keys (pressed/not pressed).
+ * Populated by game.js and read by World/Character.
  */
 class Keyboard {
     LEFT;

@@ -1,11 +1,11 @@
-/** Aktuell geladenes Level, wird bei jedem Spielstart neu erzeugt. */
+/** Currently loaded level, recreated on every game start. */
 let level1;
 
 
 /**
- * Baut Level 1 komplett neu auf (Gegner, Wolken, Hintergrund, Münzen,
- * Flaschen). Wird bei jedem Spielstart/Neustart aufgerufen, damit keine
- * alten Objekte aus der vorherigen Runde übrig bleiben.
+ * Builds level 1 completely from scratch (enemies, clouds, background,
+ * coins, bottles). Called on every game start/restart so no old objects
+ * from the previous round are left over.
  */
 function initLevel1() {
 
