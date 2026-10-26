@@ -123,13 +123,18 @@ function gameWon() {
 
 
 /**
- * Detects from the user agent whether the game is running on a mobile
- * device.
- * @returns {boolean} true if a mobile device is detected.
+ * Detects whether the game is running on a mobile or tablet device.
+ * Tablets like the iPad report a desktop user agent by default, so a
+ * coarse (touch) primary pointer is used as a fallback for those
+ * devices instead of relying on maxTouchPoints, which can be as low
+ * as 1 on some iPads regardless of their actual touch capability.
+ * @returns {boolean} true if a mobile or tablet device is detected.
  */
 function isMobile() {
     const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
-    return regex.test(navigator.userAgent);
+    const hasCoarsePointer = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+    const isTouchDevice = navigator.maxTouchPoints > 0;
+    return regex.test(navigator.userAgent) || hasCoarsePointer || isTouchDevice;
 }
 
 
