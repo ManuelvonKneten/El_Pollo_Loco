@@ -8,7 +8,7 @@ class Character extends MovableObject {
     y = 120;
     speed = 5;
     energy = 100;
-    pickupTopPadding = 140;
+    offset = { top: 124, right: 15, bottom: 10, left: 15 };
     lastActionTime = 0;
     IMAGES_IDLE = [
             'img/2_character_pepe/1_idle/idle/I-1.png',
@@ -199,23 +199,6 @@ class Character extends MovableObject {
         } else {
             this.playAnimation(this.IMAGES_IDLE);
         }
-    }
-
-
-    /**
-     * Prüft die Kollision mit Sammelobjekten (Coins/Flaschen) über eine
-     * verkleinerte Hitbox, damit nicht jede Münze über dem Kopf automatisch
-     * eingesammelt wird.
-     * @param {DrawableObject} obj - Das Sammelobjekt.
-     * @returns {boolean} true, wenn der Charakter das Objekt erreicht.
-     */
-    isCollingPickup(obj) {
-        let y = this.y + this.pickupTopPadding;
-        let height = this.height - this.pickupTopPadding;
-        return this.x + this.width > obj.x &&
-               y + height > obj.y &&
-               this.x < obj.x + obj.width &&
-               y < obj.y + obj.height;
     }
 
 }

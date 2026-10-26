@@ -102,7 +102,7 @@ class World {
      */
     checkCoinPickups() {
         this.level.coins.forEach((coin) => {
-            if (this.character.isCollingPickup(coin)) {
+            if (this.character.isColling(coin)) {
                 this.collectCoin(coin);
             }
         });
@@ -115,7 +115,7 @@ class World {
      */
     checkBottlePickups() {
         this.level.bottles.forEach((bottle) => {
-            if (this.character.isCollingPickup(bottle)) {
+            if (this.character.isColling(bottle)) {
                 this.collectBottle(bottle);
             }
         });
