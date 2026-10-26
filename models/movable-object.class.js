@@ -104,7 +104,7 @@ class MovableObject extends DrawableObject {
      * Startet einen Sprung, indem die vertikale Geschwindigkeit gesetzt wird.
      */
     jump(){
-        this.speedY = 30;
+        this.speedY = 25;
     }
 
 }

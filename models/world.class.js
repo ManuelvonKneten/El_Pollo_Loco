@@ -143,14 +143,21 @@ class World {
 
     /**
      * Prüft, ob der Charakter fallend von oben auf den Gegner trifft
-     * (zählt beim Endboss nie als Sprungangriff).
+     * (zählt beim Endboss nie als Sprungangriff). Nutzt für beide Seiten
+     * die offset-verkleinerten Hitbox-Kanten, damit die Schwelle bei
+     * kleinen, bodennahen Gegnern (z.B. ChickenSmall) nicht fast unmöglich
+     * eng wird.
      * @param {MovableObject} enemy - Der mögliche Gegner.
      * @returns {boolean} true bei einem gültigen Sprung-Kill.
      */
     isJumpedOnTop(enemy) {
+        let character = this.character;
+        let characterBottom = character.y + character.height - character.offset.bottom;
+        let enemyTop = enemy.y + enemy.offset.top;
+        let enemyBottom = enemy.y + enemy.height - enemy.offset.bottom;
         return !(enemy instanceof Endboss) &&
-            this.character.speedY < 0 &&
-            this.character.y + this.character.height < enemy.y + enemy.height * 0.75;
+            character.speedY < 0 &&
+            characterBottom < enemyTop + (enemyBottom - enemyTop) * 0.9;
     }
 
 
