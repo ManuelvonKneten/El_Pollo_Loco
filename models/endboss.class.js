@@ -7,7 +7,7 @@ class Endboss extends MovableObject {
     width = 250;
     y = 55;
     baseY = 55;
-    speed = 2;
+    speed = 3.5;
     energy = 100;
     hadFirstContact = false;
     deadAnimationPlaying = false;
@@ -20,9 +20,10 @@ class Endboss extends MovableObject {
     alertUntil = 0;
 
     flightPhase = 0;
-    flightAmplitude = 25;
+    flightAmplitude = 45;
+    flightSpeed = 0.09;
     attackRange = 300;
-    attackSpeed = 8;
+    attackSpeed = 10;
 
     rageHealthThreshold = 30;
     firstContactAttackTriggered = false;
@@ -103,7 +104,7 @@ class Endboss extends MovableObject {
             if (this.isDead() || this.rageState) {
                 return;
             }
-            this.flightPhase += 0.05;
+            this.flightPhase += this.flightSpeed;
             this.y = this.baseY + Math.sin(this.flightPhase) * this.flightAmplitude;
         }, 30);
     }
@@ -116,7 +117,7 @@ class Endboss extends MovableObject {
     animate(){
         setStoppableInterval(() => {
             this.updateAnimationState();
-        }, 200);
+        }, 130);
     }
 
 
