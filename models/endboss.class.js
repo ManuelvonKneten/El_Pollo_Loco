@@ -24,6 +24,15 @@ class Endboss extends MovableObject {
     attackRange = 300;
     attackSpeed = 8;
 
+    rageHealthThreshold = 30;
+    rageTriggered = false;
+    rageState = null;
+    rageJumpHeight = 180;
+    rageRiseSpeed = 20;
+    rageFallSpeed = 25;
+    rageDiveSpeed = 35;
+    rageTargetX = 0;
+
     IMAGES_WALKING = [
         'img/4_enemie_boss_chicken/1_walk/G1.png',
         'img/4_enemie_boss_chicken/1_walk/G2.png',
@@ -89,7 +98,7 @@ class Endboss extends MovableObject {
      */
     fly() {
         setStoppableInterval(() => {
-            if (this.isDead()) {
+            if (this.isDead() || this.rageState) {
                 return;
             }
             this.flightPhase += 0.05;
@@ -126,7 +135,7 @@ class Endboss extends MovableObject {
 
 
     /**
-     * Behandelt Tod, Patrouille und Alarm-Phase.
+     * Behandelt Tod, Patrouille, Wutangriff und Alarm-Phase.
      * @returns {boolean} true, wenn einer dieser Zustände aktiv war.
      */
     handleSpecialStates() {
@@ -138,11 +147,84 @@ class Endboss extends MovableObject {
             this.patrol();
             return true;
         }
+        this.checkRageAttack();
+        if (this.rageState) {
+            return true;
+        }
         if (Date.now() < this.alertUntil) {
             this.playAnimation(this.IMAGES_ALERT);
             return true;
         }
         return false;
+    }
+
+
+    /**
+     * Löst einmalig einen besonders harten Frontalangriff aus, sobald die
+     * Energie des Endbosses auf rageHealthThreshold% oder darunter fällt:
+     * hoher Sprung, dann ein sehr schneller Sturz auf die Spielerposition.
+     */
+    checkRageAttack() {
+        if (!this.rageTriggered && this.energy > 0 && this.energy <= this.rageHealthThreshold) {
+            this.rageTriggered = true;
+            this.startRageAttack();
+        }
+    }
+
+
+    /**
+     * Startet den Wutangriff: eigenes, schnelles Update-Intervall unabhängig
+     * vom normalen 200ms-Animationstakt, damit Sprung und Sturz flüssig wirken.
+     */
+    startRageAttack() {
+        this.rageState = 'rising';
+        let rageInterval = setStoppableInterval(() => {
+            this.updateRageAttack(rageInterval);
+        }, 30);
+    }
+
+
+    /**
+     * Bewegt den Endboss durch die beiden Phasen des Wutangriffs: erst
+     * hoch springen, am Scheitelpunkt die Spielerposition anvisieren, dann
+     * sehr schnell auf diese Position herabstürzen.
+     * @param {number} rageInterval - ID des Update-Intervalls (zum Stoppen beim Landen).
+     */
+    updateRageAttack(rageInterval) {
+        this.playAnimation(this.IMAGES_ATTACK);
+        if (this.rageState === 'rising') {
+            this.y -= this.rageRiseSpeed;
+            if (this.y <= this.baseY - this.rageJumpHeight) {
+                this.rageState = 'diving';
+                this.rageTargetX = this.world.character.x + 5;
+            }
+            return;
+        }
+        this.faceCharacter();
+        this.y = Math.min(this.baseY, this.y + this.rageFallSpeed);
+        let dx = this.rageTargetX - this.x;
+        this.x += Math.abs(dx) <= this.rageDiveSpeed ? dx : Math.sign(dx) * this.rageDiveSpeed;
+        if (this.y >= this.baseY && this.x === this.rageTargetX) {
+            this.landRageAttack(rageInterval);
+        }
+    }
+
+
+    /**
+     * Beendet den Wutangriff und teilt bei Treffernähe einen schweren
+     * Extra-Schaden aus, unabhängig vom normalen Kontaktschaden.
+     * @param {number} rageInterval - ID des zu stoppenden Update-Intervalls.
+     */
+    landRageAttack(rageInterval) {
+        clearInterval(rageInterval);
+        this.rageState = null;
+        this.y = this.baseY;
+        this.flightPhase = 0;
+        let character = this.world.character;
+        if (Math.abs(this.x - character.x) < 120 && !character.isHurt()) {
+            character.hit(30);
+            playSound('playerHurt');
+        }
     }
 
 

@@ -128,7 +128,7 @@ class World {
      */
     checkEnemyContact() {
         this.level.enemies.forEach((enemy) => {
-            if (enemy.dead || !this.character.isColling(enemy)) {
+            if (enemy.dead || enemy.rageState || !this.character.isColling(enemy)) {
                 return;
             }
             if (this.isJumpedOnTop(enemy)) {
