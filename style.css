@@ -199,6 +199,17 @@ canvas {
     pointer-events: none;
 }
 
+/* On tablets, #game_container is letterboxed/pillarboxed by its fixed
+   aspect-ratio, so anchoring controls to it leaves a gap to the real
+   screen edge. Anchor to the viewport instead so the buttons stay
+   reachable at the actual bottom/side edges. */
+@media (min-width: 768px) {
+    .mobile_controls {
+        position: fixed;
+        padding: 0 24px calc(20px + env(safe-area-inset-bottom)) 24px;
+    }
+}
+
 .mobile_controls_left,
 .mobile_controls_right {
     display: flex;
