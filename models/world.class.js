@@ -134,7 +134,7 @@ class World {
             if (this.isJumpedOnTop(enemy)) {
                 this.defeatEnemyByJump(enemy);
             } else if (!this.character.isHurt()) {
-                this.character.hit();
+                this.character.hit(enemy instanceof Endboss ? 15 : 5);
                 playSound('playerHurt');
             }
         });

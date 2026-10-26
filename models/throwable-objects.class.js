@@ -24,6 +24,7 @@ class ThrowableObject extends MovableObject {
     groundY = 370;
     hasHit = false;
     splashStartTime = 0;
+    offset = { top: 9, right: 20, bottom: 8, left: 20 };
 
 
     /**

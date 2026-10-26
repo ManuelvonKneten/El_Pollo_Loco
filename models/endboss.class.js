@@ -6,16 +6,23 @@ class Endboss extends MovableObject {
     height = 400;
     width = 250;
     y = 55;
+    baseY = 55;
     speed = 2;
     energy = 100;
     hadFirstContact = false;
     deadAnimationPlaying = false;
     world;
+    offset = { top: 75, right: 9, bottom: 32, left: 24 };
 
     patrolLeftX = 2350;
     patrolRightX = 2650;
     patrolDirection = -1;
     alertUntil = 0;
+
+    flightPhase = 0;
+    flightAmplitude = 25;
+    attackRange = 300;
+    attackSpeed = 8;
 
     IMAGES_WALKING = [
         'img/4_enemie_boss_chicken/1_walk/G1.png',
@@ -73,6 +80,21 @@ class Endboss extends MovableObject {
 
         this.x = 2500;
         this.animate();
+        this.fly();
+    }
+
+
+    /**
+     * Lässt den Endboss sanft auf und ab schweben, solange er nicht tot ist.
+     */
+    fly() {
+        setStoppableInterval(() => {
+            if (this.isDead()) {
+                return;
+            }
+            this.flightPhase += 0.05;
+            this.y = this.baseY + Math.sin(this.flightPhase) * this.flightAmplitude;
+        }, 30);
     }
 
 
@@ -125,17 +147,40 @@ class Endboss extends MovableObject {
 
 
     /**
-     * Greift an, wenn der Charakter nah genug ist, sonst läuft der
-     * Endboss weiter Richtung Spieler.
+     * Greift an, wenn der Charakter nah genug ist (schneller Angriffssprint
+     * auf den Spieler zu), sonst läuft der Endboss normal Richtung Spieler.
+     * Dreht sich dabei immer zur tatsächlichen Position des Spielers.
      */
     walkOrAttack() {
+        this.faceCharacter();
         if (this.isAttacking()) {
+            this.lungeTowardCharacter();
             this.playAnimation(this.IMAGES_ATTACK);
         } else {
             this.moveLeft();
-            this.otherDirection = false;
             this.playAnimation(this.IMAGES_WALKING);
         }
+    }
+
+
+    /**
+     * Dreht den Endboss so, dass er zur aktuellen Position des Spielers blickt.
+     */
+    faceCharacter() {
+        if (this.world) {
+            this.otherDirection = this.x < this.world.character.x;
+        }
+    }
+
+
+    /**
+     * Stürmt im Angriffsmodus deutlich schneller auf den Spieler zu, bleibt
+     * dabei aber immer auf seiner Seite stehen.
+     */
+    lungeTowardCharacter() {
+        let character = this.world.character;
+        let minX = character.x + 5;
+        this.x = Math.max(minX, this.x - this.attackSpeed);
     }
 
 
@@ -162,10 +207,10 @@ class Endboss extends MovableObject {
 
     /**
      * Prüft, ob der Charakter nah genug ist, damit der Endboss angreift.
-     * @returns {boolean} true, wenn der Abstand zum Charakter unter 150px liegt.
+     * @returns {boolean} true, wenn der Abstand zum Charakter unter attackRange liegt.
      */
     isAttacking() {
-        return this.world && Math.abs(this.x - this.world.character.x) < 150;
+        return this.world && Math.abs(this.x - this.world.character.x) < this.attackRange;
     }
 
 
