@@ -11,6 +11,12 @@ class Character extends MovableObject {
     offset = { top: 124, right: 35, bottom: 10, left: 35 };
     lastActionTime = 0;
     jumpFrame = 0;
+    idleFrame = 0;
+    lastIdleFrameTime = 0;
+    idleFrameIntervalMs = 300;
+    sleepFrame = 0;
+    lastSleepFrameTime = 0;
+    sleepFrameIntervalMs = 400;
     IMAGES_IDLE = [
             'img/2_character_pepe/1_idle/idle/I-1.png',
             'img/2_character_pepe/1_idle/idle/I-2.png',
@@ -210,10 +216,39 @@ class Character extends MovableObject {
         if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
             this.playAnimation(this.IMAGES_WALKING);
         } else if (new Date().getTime() - this.lastActionTime >= 15000) {
-            this.playAnimation(this.IMAGES_SLEEP);
+            this.playSleepAnimation();
         } else {
-            this.playAnimation(this.IMAGES_IDLE);
+            this.playIdleAnimation();
         }
+    }
+
+
+    /**
+     * Plays the idle animation at a slower, fixed pace instead of the
+     * 50ms base tick, so Pepe doesn't fidget too fast while standing
+     * still.
+     */
+    playIdleAnimation() {
+        let now = Date.now();
+        if (now - this.lastIdleFrameTime >= this.idleFrameIntervalMs) {
+            this.lastIdleFrameTime = now;
+            this.idleFrame = (this.idleFrame + 1) % this.IMAGES_IDLE.length;
+        }
+        this.img = this.imageCache[this.IMAGES_IDLE[this.idleFrame]];
+    }
+
+
+    /**
+     * Plays the long-idle ("zZz") sleep animation at a slower, fixed
+     * pace instead of the 50ms base tick.
+     */
+    playSleepAnimation() {
+        let now = Date.now();
+        if (now - this.lastSleepFrameTime >= this.sleepFrameIntervalMs) {
+            this.lastSleepFrameTime = now;
+            this.sleepFrame = (this.sleepFrame + 1) % this.IMAGES_SLEEP.length;
+        }
+        this.img = this.imageCache[this.IMAGES_SLEEP[this.sleepFrame]];
     }
 
 }
