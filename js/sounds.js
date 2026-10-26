@@ -20,6 +20,10 @@ let backgroundMusic = new Audio('audio/background_music.mp3');
 backgroundMusic.loop = true;
 backgroundMusic.volume = 0.3;
 
+/** Game-Over/Sieg-Sounds laufen länger und müssen bei einem Neustart gezielt gestoppt werden können. */
+const END_SOUND_NAMES = ['gameOver', 'win'];
+let currentEndSound = null;
+
 
 /**
  * Spielt einen einmaligen Soundeffekt ab, sofern der Sound nicht stummgeschaltet ist.
@@ -31,7 +35,23 @@ function playSound(name) {
     }
     let sound = new Audio(SOUND_FILES[name]);
     sound.volume = 0.5;
+    if (END_SOUND_NAMES.includes(name)) {
+        currentEndSound = sound;
+    }
     sound.play().catch(() => {});
+}
+
+
+/**
+ * Stoppt einen noch laufenden Game-Over-/Sieg-Sound, damit er nicht in
+ * eine neu gestartete Spielrunde hineinspielt.
+ */
+function stopEndSound() {
+    if (currentEndSound) {
+        currentEndSound.pause();
+        currentEndSound.currentTime = 0;
+        currentEndSound = null;
+    }
 }
 
 

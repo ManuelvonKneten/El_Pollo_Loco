@@ -62,6 +62,7 @@ function showStartScreen() {
  * und Welt neu auf und startet die Hintergrundmusik.
  */
 function startGame() {
+    stopEndSound();
     closeOptions();
     closeImpressum();
     document.getElementById('start_screen').classList.add('d_none');
@@ -193,6 +194,7 @@ function restartGame() {
 function backToMenu() {
     stopAllIntervals();
     stopMusic();
+    stopEndSound();
     showStartScreen();
 }
 
