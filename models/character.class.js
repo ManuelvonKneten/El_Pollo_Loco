@@ -111,17 +111,13 @@ class Character extends MovableObject {
 
 
     /**
-     * Checks for death/hurt on every tick, processes keyboard input, and
-     * updates the camera position.
+     * Processes keyboard input and updates the camera position on every
+     * tick, as long as the character is alive.
      */
     animateMovement() {
         setStoppableInterval(() => {
             if (this.isDead()) {
-                this.playAnimation(this.IMAGES_DEAD);
                 return;
-            }
-            if (this.isHurt()) {
-                this.playAnimation(this.IMAGES_HURT);
             }
             this.handleMovementInput();
             this.world.camera_x = -this.x + 100;
@@ -174,14 +170,17 @@ class Character extends MovableObject {
 
 
     /**
-     * Switches sprites depending on state: jump, walk, idle, or sleep.
+     * Switches sprites depending on state: dead, hurt, jump, walk,
+     * idle, or sleep. This is the single place that sets the
+     * character's image, so states never overwrite each other.
      */
     animateSprite() {
         setStoppableInterval(() => {
             if (this.isDead()) {
-                return;
-            }
-            if (this.isAboveGround()) {
+                this.playAnimation(this.IMAGES_DEAD);
+            } else if (this.isHurt()) {
+                this.playAnimation(this.IMAGES_HURT);
+            } else if (this.isAboveGround()) {
                 this.playJumpAnimation();
             } else {
                 this.playIdleOrWalkAnimation();
