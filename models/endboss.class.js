@@ -25,6 +25,7 @@ class Endboss extends MovableObject {
     attackSpeed = 8;
 
     rageHealthThreshold = 30;
+    firstContactAttackTriggered = false;
     rageTriggered = false;
     rageState = null;
     rageJumpHeight = 180;
@@ -147,15 +148,28 @@ class Endboss extends MovableObject {
             this.patrol();
             return true;
         }
-        this.checkRageAttack();
-        if (this.rageState) {
-            return true;
-        }
         if (Date.now() < this.alertUntil) {
             this.playAnimation(this.IMAGES_ALERT);
             return true;
         }
+        this.checkFirstContactAttack();
+        this.checkRageAttack();
+        if (this.rageState) {
+            return true;
+        }
         return false;
+    }
+
+
+    /**
+     * Löst direkt nach der Alarm-Phase beim allerersten Zusammentreffen
+     * einmalig denselben Sprung-Sturz-Angriff aus wie checkRageAttack.
+     */
+    checkFirstContactAttack() {
+        if (!this.firstContactAttackTriggered && !this.rageState) {
+            this.firstContactAttackTriggered = true;
+            this.startRageAttack();
+        }
     }
 
 
@@ -165,7 +179,7 @@ class Endboss extends MovableObject {
      * hoher Sprung, dann ein sehr schneller Sturz auf die Spielerposition.
      */
     checkRageAttack() {
-        if (!this.rageTriggered && this.energy > 0 && this.energy <= this.rageHealthThreshold) {
+        if (!this.rageTriggered && !this.rageState && this.energy > 0 && this.energy <= this.rageHealthThreshold) {
             this.rageTriggered = true;
             this.startRageAttack();
         }
