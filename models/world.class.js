@@ -13,6 +13,8 @@ class World {
     coinsCollected = 0;
     bottlesAvailable = 0;
     gameEnded = false;
+    lastThrowTime = 0;
+    throwCooldown = 1000;
 
     statusBar;
     coinBar;
@@ -248,11 +250,14 @@ class World {
 
 
     /**
-     * Erzeugt bei Tastendruck D eine neue Flasche, sofern Vorrat
-     * vorhanden ist, und reduziert den Flaschenvorrat um eins.
+     * Erzeugt bei Tastendruck D eine neue Flasche, sofern Vorrat vorhanden
+     * ist und die letzte Flasche mindestens throwCooldown ms her ist (damit
+     * D nicht gespammt werden kann), und reduziert den Flaschenvorrat um eins.
      */
     checkThrowObjects() {
-        if (this.keyboard.D && this.bottlesAvailable > 0) {
+        let canThrow = Date.now() - this.lastThrowTime >= this.throwCooldown;
+        if (this.keyboard.D && this.bottlesAvailable > 0 && canThrow) {
+            this.lastThrowTime = Date.now();
             let spawnX = this.character.otherDirection ? this.character.x - 20 : this.character.x + 100;
             let bottle = new ThrowableObject(spawnX, this.character.y + 100, this.character.otherDirection);
             this.throwableObjects.push(bottle);
