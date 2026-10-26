@@ -216,7 +216,7 @@ class World {
      */
     defeatEnemyByJump(enemy) {
         enemy.die();
-        this.character.speedY = 15;
+        this.character.speedY = 20;
         playSound('enemyDead');
         setTimeout(() => {
             this.level.enemies = this.level.enemies.filter(e => e !== enemy);
