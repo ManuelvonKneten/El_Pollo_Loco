@@ -22,7 +22,6 @@ class World {
     bottleBar;
     endbossBar;
 
-
     /**
      * Creates the game world, sets up the HUD status bars, and starts
      * drawing as well as the ongoing game logic.
@@ -45,16 +44,11 @@ class World {
         this.run();
     }
 
-
-    /**
-     * Links the character and endboss to this world, so both can access
-     * the keyboard, level, and camera.
-     */
+    /** Links the character and endboss to this world. */
     setWorld(){
         this.character.world = this;
         this.level.endboss.world = this;
     }
-
 
     /**
      * Central game loop (60fps): checks collisions, bottle throws,
@@ -74,7 +68,6 @@ class World {
         }, 1000 / 60);
     }
 
-
     /**
      * Triggers the alert animation the first time the boss zone is
      * reached, and then shows the endboss status bar.
@@ -87,11 +80,7 @@ class World {
         }
     }
 
-
-    /**
-     * Checks all collisions for a frame: collecting coins/bottles,
-     * enemy contact (jump-kill or damage), and bottle hits.
-     */
+    /** Checks coin/bottle pickups, enemy contact, and bottle hits for this frame. */
     checkCollisions() {
         this.checkCoinPickups();
         this.checkBottlePickups();
@@ -99,10 +88,7 @@ class World {
         this.checkThrowableHits();
     }
 
-
-    /**
-     * Checks whether the character has reached a coin and collects it.
-     */
+    /** Collects a coin the character has reached. */
     checkCoinPickups() {
         this.level.coins.forEach((coin) => {
             if (this.character.isColling(coin)) {
@@ -111,11 +97,7 @@ class World {
         });
     }
 
-
-    /**
-     * Checks whether the character has reached a bottle on the ground
-     * and collects it.
-     */
+    /** Collects a bottle on the ground the character has reached. */
     checkBottlePickups() {
         this.level.bottles.forEach((bottle) => {
             if (this.character.isColling(bottle)) {
@@ -123,7 +105,6 @@ class World {
             }
         });
     }
-
 
     /**
      * Checks contact between the character and enemies: jumping on top
@@ -143,13 +124,10 @@ class World {
         });
     }
 
-
     /**
      * Checks whether the character is falling onto the enemy from above
-     * (never counts as a jump attack on the endboss). Uses the offset-
-     * shrunk hitbox edges on both sides so the threshold doesn't become
-     * nearly impossible for small, ground-hugging enemies (e.g.
-     * ChickenSmall).
+     * (never counts on the endboss). Uses the offset-shrunk hitbox so
+     * the threshold stays fair for small, ground-hugging enemies.
      * @param {MovableObject} enemy - The potential enemy.
      * @returns {boolean} true for a valid jump-kill.
      */
@@ -163,11 +141,7 @@ class World {
             characterBottom < enemyTop + (enemyBottom - enemyTop) * 0.9;
     }
 
-
-    /**
-     * Checks whether thrown bottles hit an enemy, and removes bottles
-     * whose splash animation has already finished.
-     */
+    /** Checks bottle-enemy hits and removes bottles whose splash has finished. */
     checkThrowableHits() {
         this.throwableObjects.forEach((bottle) => {
             if (bottle.hasHit) {
@@ -179,10 +153,8 @@ class World {
                 }
             });
         });
-
         this.throwableObjects = this.throwableObjects.filter(b => !b.hasHit || (Date.now() - b.splashStartTime < 400));
     }
-
 
     /**
      * Removes a collected coin from the level and updates the counter
@@ -196,7 +168,6 @@ class World {
         playSound('coin');
     }
 
-
     /**
      * Removes a collected bottle from the level and increases the
      * character's bottle supply.
@@ -208,7 +179,6 @@ class World {
         this.bottleBar.setPercentage(Math.min(100, this.bottlesAvailable / this.level.totalBottles * 100));
         playSound('bottleCollect');
     }
-
 
     /**
      * Defeats an enemy via a jump attack: the enemy dies, the character
@@ -224,7 +194,6 @@ class World {
         }, 800);
     }
 
-
     /**
      * Processes a bottle hit: makes the bottle splash and damages the
      * enemy (the endboss loses energy, normal enemies die instantly).
@@ -234,7 +203,6 @@ class World {
     hitEnemyWithBottle(bottle, enemy) {
         bottle.splash();
         playSound('bottleHit');
-
         if (enemy instanceof Endboss) {
             enemy.hit(20);
             playSound('bossHurt');
@@ -247,7 +215,6 @@ class World {
             }, 800);
         }
     }
-
 
     /**
      * Spawns a new bottle on D key press, provided there's supply left
@@ -267,22 +234,14 @@ class World {
         this.keyboard.D = false;
     }
 
-
-    /**
-     * Draws a complete frame: background, game objects, HUD, and
-     * schedules itself again for the next frame.
-     */
+    /** Draws a complete frame and schedules itself again for the next one. */
     draw() {
         this.drawWorldObjects();
         this.drawHud();
         this.scheduleNextFrame();
     }
 
-
-    /**
-     * Draws the background, character, enemies, and collectibles within
-     * the camera offset.
-     */
+    /** Draws the background, character, enemies, and collectibles within the camera offset. */
     drawWorldObjects() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         let cameraX = Math.round(this.camera_x);
@@ -299,11 +258,7 @@ class World {
         this.ctx.translate(-cameraX, 0);
     }
 
-
-    /**
-     * Draws the status bars and the HUD text, fixed on top of the game
-     * regardless of scrolling.
-     */
+    /** Draws the status bars and HUD text, fixed on top regardless of scrolling. */
     drawHud() {
         this.statusBar.setPercentage(this.character.energy);
         this.addToMap(this.statusBar);
@@ -315,10 +270,7 @@ class World {
         this.drawHudText();
     }
 
-
-    /**
-     * Schedules the next draw frame, as long as the game is still running.
-     */
+    /** Schedules the next draw frame, as long as the game is still running. */
     scheduleNextFrame() {
         if (this.gameEnded) {
             return;
@@ -329,27 +281,21 @@ class World {
         });
     }
 
-
-    /**
-     * Draws the numeric values (coins, bottles, endboss percentage) with
-     * an outline, centered on the respective status bar.
-     */
+    /** Draws the numeric HUD values, centered on their status bar, with an outline. */
     drawHudText() {
         this.ctx.font = 'bold 12px Arial';
         this.ctx.lineWidth = 2;
         this.ctx.strokeStyle = 'black';
         this.ctx.fillStyle = 'white';
-
         this.ctx.textAlign = 'center';
+
         this.drawOutlinedText(this.coinsCollected + ' / ' + this.level.totalCoins, this.coinBar.x + this.coinBar.width / 2, this.coinBar.y + this.coinBar.height / 2 + 10);
         this.drawOutlinedText(String(this.bottlesAvailable), this.bottleBar.x + this.bottleBar.width / 2, this.bottleBar.y + this.bottleBar.height / 2 + 10);
-
         if (this.level.endboss.hadFirstContact) {
             this.drawOutlinedText(Math.round(this.level.endboss.energy) + '%', this.endbossBar.x + this.endbossBar.width / 2, this.endbossBar.y + this.endbossBar.height / 2 + 6);
         }
         this.ctx.textAlign = 'left';
     }
-
 
     /**
      * Draws text with a black outline for better readability.
@@ -362,7 +308,6 @@ class World {
         this.ctx.fillText(text, x, y);
     }
 
-
     /**
      * Draws a list of objects onto the canvas one after another.
      * @param {DrawableObject[]} objects - Objects to draw.
@@ -372,7 +317,6 @@ class World {
             this.addToMap(o);
         })
     }
-
 
     /**
      * Draws a single object, mirroring it horizontally if it's facing
@@ -385,12 +329,10 @@ class World {
         }
         mo.draw(this.ctx);
         mo.drawFrame(this.ctx);
-
         if (mo.otherDirection) {
             this.flipImageBack(mo);
         }
     }
-
 
     /**
      * Mirrors the drawing context horizontally to render an object
@@ -398,19 +340,18 @@ class World {
      * @param {DrawableObject} mo - The object to mirror.
      */
     flipImage(mo){
-            this.ctx.save();
-            this.ctx.translate(mo.width, 0);
-            this.ctx.scale(-1, 1);
-            mo.x = mo.x * -1;
+        this.ctx.save();
+        this.ctx.translate(mo.width, 0);
+        this.ctx.scale(-1, 1);
+        mo.x = mo.x * -1;
     }
-
 
     /**
      * Undoes the mirroring of the drawing context again.
      * @param {DrawableObject} mo - The previously mirrored object.
      */
     flipImageBack(mo) {
-            mo.x = mo.x * -1;
-            this.ctx.restore();
+        mo.x = mo.x * -1;
+        this.ctx.restore();
     }
 }
