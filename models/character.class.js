@@ -159,7 +159,7 @@ class Character extends MovableObject {
      * (für die Idle-/Sleep-Erkennung).
      */
     handleJumpInput() {
-        if ((this.world.keyboard.UP || this.world.keyboard.SPACE) && !this.isAboveGround()) {
+        if ((this.world.keyboard.UP || this.world.keyboard.SPACE) && this.speedY === 0 && !this.isAboveGround()) {
             this.jump();
             playSound('jump');
             this.lastActionTime = new Date().getTime();
