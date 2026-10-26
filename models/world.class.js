@@ -273,7 +273,8 @@ class World {
      */
     drawWorldObjects() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.translate(this.camera_x, 0);
+        let cameraX = Math.round(this.camera_x);
+        this.ctx.translate(cameraX, 0);
 
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
@@ -283,7 +284,7 @@ class World {
         this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.throwableObjects);
 
-        this.ctx.translate(-this.camera_x, 0);
+        this.ctx.translate(-cameraX, 0);
     }
 
 
